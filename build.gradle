@@ -8,6 +8,7 @@ buildscript {
         classpath deps.classpath.gradle
         classpath deps.classpath.kotlin
         classpath deps.classpath.hilt
+        classpath deps.classpath.googlemap
     }
 }
 

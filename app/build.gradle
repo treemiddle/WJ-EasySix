@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
 android {
@@ -19,9 +20,17 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"AIzaSyDvTCX17MZBQ3J-cW1gUuXRpK383nB-2Ng\""
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"AIzaSyDvTCX17MZBQ3J-cW1gUuXRpK383nB-2Ng\""
         }
     }
     compileOptions {
@@ -62,4 +71,6 @@ dependencies {
     api deps.rx.java
     api deps.rx.kotlin
     api deps.rx.android
+
+    api deps.map
 }

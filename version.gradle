@@ -50,13 +50,18 @@ ext {
             ],
 
             gson              : '2.8.8',
+
+            googlemap_plugin  : '2.0.0',
+
+            googlemap         : '18.0.0'
     ]
 
     deps = [
             classpath: [
-                    gradle         : "com.android.tools.build:gradle:$versions.gradle",
-                    kotlin         : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
-                    hilt           : "com.google.dagger:hilt-android-gradle-plugin:$versions.hilt.plugin"
+                    gradle   : "com.android.tools.build:gradle:$versions.gradle",
+                    kotlin   : "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
+                    hilt     : "com.google.dagger:hilt-android-gradle-plugin:$versions.hilt.plugin",
+                    googlemap: "com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:$versions.googlemap_plugin"
             ],
 
             test     : [
@@ -86,7 +91,9 @@ ext {
                     java   : "io.reactivex.rxjava2:rxjava:$versions.rx.java",
                     kotlin : "io.reactivex.rxjava2:rxkotlin:$versions.rx.kotlin",
                     android: "io.reactivex.rxjava2:rxandroid:$versions.rx.android"
-            ]
+            ],
+
+            map      : "com.google.android.gms:play-services-maps:$versions.googlemap"
     ]
     remote = [
             rx      : [
@@ -130,7 +137,7 @@ ext {
                     hilt_compiler: "androidx.hilt:hilt-compiler:$versions.hilt.hilt_compiler"
             ],
 
-            rx      : [
+            rx  : [
                     java: "io.reactivex.rxjava2:rxjava:$versions.rx.java"
             ],
     ]
@@ -142,7 +149,7 @@ ext {
                     hilt_compiler: "androidx.hilt:hilt-compiler:$versions.hilt.hilt_compiler"
             ],
 
-            rx      : [
+            rx  : [
                     java: "io.reactivex.rxjava2:rxjava:$versions.rx.java"
             ],
     ]
