@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.sample.R
@@ -13,7 +14,9 @@ import com.example.sample.ui.book.BookFragment
 import com.example.sample.ui.history.HistoryFragment
 import com.example.sample.ui.info.InfoFragment
 import com.example.sample.ui.map.MapFragment
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -21,6 +24,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var historyFragment: Fragment
     private lateinit var infoFragment: Fragment
     private lateinit var bookFragment: Fragment
+    private val mainViewModel by viewModels<MainViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportFragmentManager.fragmentFactory = FragmentFactoryImpl()
@@ -29,8 +33,15 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.lifecycleOwner = this
 
+        initObserve()
         addFragments()
         initFragment()
+    }
+
+    private fun initObserve() {
+        with(mainViewModel) {
+
+        }
     }
 
     private fun addFragments() {
