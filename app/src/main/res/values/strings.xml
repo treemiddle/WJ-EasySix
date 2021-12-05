@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Sample</string>
+
+    <string name="map_button_text_01">V</string>
+    <string name="map_button_text_02">Set A</string>
+    <string name="map_button_text_03">Set B</string>
+    <string name="map_button_text_04">Book</string>
 </resources>

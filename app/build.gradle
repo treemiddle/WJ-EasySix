@@ -24,13 +24,13 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"AIzaSyDvTCX17MZBQ3J-cW1gUuXRpK383nB-2Ng\""
+            buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"AIzaSyBZ0JziJdUfjmpZ3vrW1TkMvpCVkiUXKlQ\""
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
-            buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"AIzaSyDvTCX17MZBQ3J-cW1gUuXRpK383nB-2Ng\""
+            buildConfigField "String", "GOOGLE_MAP_API_KEY", "\"AIzaSyBZ0JziJdUfjmpZ3vrW1TkMvpCVkiUXKlQ\""
         }
     }
     compileOptions {

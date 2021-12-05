@@ -16,4 +16,7 @@ class BookFragment : BaseFragment<FragmentBookBinding>(R.layout.fragment_book) {
 
     }
 
+    override fun initObserving() {
+
+    }
 }

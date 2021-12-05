@@ -16,4 +16,7 @@ class InfoFragment : BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
 
     }
 
+    override fun initObserving() {
+
+    }
 }

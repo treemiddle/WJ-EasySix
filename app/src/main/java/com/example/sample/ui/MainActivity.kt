@@ -1,10 +1,8 @@
 package com.example.sample.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.sample.R
@@ -36,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         initObserve()
         addFragments()
         initFragment()
+
     }
 
     private fun initObserve() {
@@ -45,10 +44,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addFragments() {
-        mapFragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, MapFragment::class.java.simpleName)
-        historyFragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, HistoryFragment::class.java.simpleName)
-        infoFragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, InfoFragment::class.java.simpleName)
-        bookFragment = supportFragmentManager.fragmentFactory.instantiate(classLoader, BookFragment::class.java.simpleName)
+        mapFragment = supportFragmentManager.fragmentFactory.instantiate(
+            classLoader,
+            MapFragment::class.java.simpleName
+        )
+        historyFragment = supportFragmentManager.fragmentFactory.instantiate(
+            classLoader,
+            HistoryFragment::class.java.simpleName
+        )
+        infoFragment = supportFragmentManager.fragmentFactory.instantiate(
+            classLoader,
+            InfoFragment::class.java.simpleName
+        )
+        bookFragment = supportFragmentManager.fragmentFactory.instantiate(
+            classLoader,
+            BookFragment::class.java.simpleName
+        )
     }
 
     private fun initFragment() = supportFragmentManager

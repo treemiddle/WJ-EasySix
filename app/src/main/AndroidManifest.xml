@@ -3,6 +3,8 @@
     package="com.example.sample">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="false"
@@ -29,7 +31,7 @@
 <!--        android:value="GOOGLE_MAP_API_KEY"-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDvTCX17MZBQ3J-cW1gUuXRpK383nB-2Ng"
+            android:value="AIzaSyBZ0JziJdUfjmpZ3vrW1TkMvpCVkiUXKlQ"
             />
 
     </application>

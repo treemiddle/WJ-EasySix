@@ -16,4 +16,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
 
     }
 
+    override fun initObserving() {
+
+    }
 }

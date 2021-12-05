@@ -34,11 +34,13 @@ abstract class BaseFragment<VDB : ViewDataBinding>(
         binding.lifecycleOwner = this
 
         bindViews()
+        initObserving()
         initData()
     }
 
-    abstract fun initData()
     abstract fun bindViews()
+    abstract fun initData()
+    abstract fun initObserving()
 
     override fun onDestroyView() {
         compositeDisposable.clear()

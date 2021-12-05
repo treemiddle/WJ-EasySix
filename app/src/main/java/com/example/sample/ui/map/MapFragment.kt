@@ -1,66 +1,126 @@
 package com.example.sample.ui.map
 
-import android.content.pm.PackageManager
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Context
 import android.location.Location
-import android.location.LocationListener
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.example.remote.AirQualityRemoteDataSourceImpl
+import android.location.LocationManager
+import android.os.Build
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.example.sample.R
 import com.example.sample.base.BaseFragment
 import com.example.sample.databinding.FragmentMapBinding
+import com.example.sample.ui.MainViewModel
+import com.example.sample.utils.makeLog
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 
-/**
- * 공기 퀄리티 값 aqi
- * 위치 정보 city -> lat, lng, name
- */
 @AndroidEntryPoint
-class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback {
+class MapFragment :
+    BaseFragment<FragmentMapBinding>(R.layout.fragment_map),
+    OnMapReadyCallback,
+    GoogleMap.OnCameraIdleListener,
+    GoogleMap.OnCameraMoveListener
+{
 
-    private lateinit var mapView: MapView
+    private val viewModel by viewModels<MapViewModel>()
+    private val activityViewModel by activityViewModels<MainViewModel>()
+    private var googleMap: GoogleMap? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        mapView = view.findViewById(R.id.map)
-        mapView?.onCreate(savedInstanceState)
-        mapView?.onResume()
-        mapView?.getMapAsync(this)
+    @RequiresApi(Build.VERSION_CODES.N)
+    val locationPermissionRequest = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions.entries.all { it.value == true }
+
+        // * 이 때 사용자가 위치 사용권한을 허용하지 않는 경우는 고려하지 않아도 좋습니다.
+        if (granted) {
+            setMap()
+        }
+    }
+
+    private val checkPermissionList = arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+
+    override fun bindViews() {
+        binding.vm = viewModel
+    }
+
+    override fun initObserving() {
+        with(viewModel) {
+            moveCamera.observe(viewLifecycleOwner, {
+                googleMap?.moveCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(it.first, it.second),
+                        16f
+                    )
+                )
+            })
+
+        }
+
+        with(activityViewModel) {
+
+        }
     }
 
     override fun initData() {
-
-    }
-
-    override fun bindViews() {
-        //val mapFragment = activity?.supportFragmentManager?.findFragmentById(R.id.map) as SupportMapFragment
-//        map = binding.map
-//        map?.getMapAsync(this)
-//        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-//        mapFragment.getMapAsync(this)
+        locationPermissionRequest.launch(checkPermissionList)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
-        //map = googleMap
-        val aaaa = LatLng(37.654601, 127.060530)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(aaaa))
-        googleMap.moveCamera(CameraUpdateFactory.zoomTo(15f))
+        this.googleMap = googleMap.apply {
+            setOnCameraIdleListener(this@MapFragment)
+            setOnCameraMoveListener(this@MapFragment)
+        }
 
+        viewModel.onMapReady(true)
     }
 
-    override fun onStart() {
-        super.onStart()
-       // map?.onStart()
+    // 카메라 이동 중지되고 사용자와 인터랙션이 없을 때
+    override fun onCameraIdle() {
+        viewModel.checkCurrentLocation(
+            lat = googleMap?.cameraPosition?.target?.latitude,
+            lng = googleMap?.cameraPosition?.target?.longitude
+        )
     }
 
-    override fun onResume() {
-        super.onResume()
-        //map?.onResume()
+    override fun onCameraMove() {
+        makeLog(javaClass.simpleName, "onCameraMove")
     }
 
+    private fun setMap() {
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
+        mapFragment?.getMapAsync(this)
+        viewModel.isReadyCheck(
+            lat = getCurrentLocation()?.latitude ?: 0.0,
+            lng = getCurrentLocation()?.longitude ?: 0.0
+        )
+    }
 
+    @SuppressLint("MissingPermission")
+    private fun getCurrentLocation(): Location? {
+        val locationManager = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+        // Returns a list of the names of available location providers.
+        val providers = locationManager.getProviders(true)
+        var currentLocation: Location? = null
+
+        for (item in providers) {
+            val location = locationManager.getLastKnownLocation(item) ?: continue
+
+            if (currentLocation == null || location.accuracy < currentLocation.accuracy) {
+                currentLocation = location
+            }
+        }
+
+        return currentLocation
+    }
 
 }

@@ -3,47 +3,47 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+
+        <variable
+            name="vm"
+            type="com.example.sample.ui.map.MapViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.gms.maps.MapView
+        <fragment
             android:id="@+id/map"
+            class="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-        <!--        <fragment-->
-        <!--            android:id="@+id/map"-->
-        <!--            android:name="com.google.android.gms.maps.SupportMapFragment"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent"-->
-        <!--            tools:context=".ui.MainActivity" />-->
 
-        <TextView
+        <ImageView
+            android:id="@+id/iv_marker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="aqi :"
-            app:layout_constraintBottom_toBottomOf="@id/tv_aqi"
-            app:layout_constraintEnd_toStartOf="@id/tv_aqi"
-            app:layout_constraintTop_toTopOf="@id/tv_aqi" />
+            android:src="@drawable/ic_marker"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_aqi"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
+            android:text="@{`aqi : ` + vm.airQualityModel.aqi}"
+            android:textColor="@color/black"
+            android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="71" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_a"
@@ -53,8 +53,10 @@
             android:gravity="start|center"
             android:hint="A"
             android:paddingStart="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             app:layout_constraintBottom_toTopOf="@id/tv_b"
-            app:layout_constraintEnd_toStartOf="@id/btn_set"
+            app:layout_constraintEnd_toStartOf="@id/tv_set"
             app:layout_constraintStart_toStartOf="@id/tv_b" />
 
         <TextView
@@ -67,18 +69,22 @@
             android:gravity="start|center"
             android:hint="B"
             android:paddingStart="8dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_set"
+            app:layout_constraintEnd_toStartOf="@id/tv_set"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/btn_set"
+            android:id="@+id/tv_set"
+            setCurrentMarkerButton="@{vm.markerButtonType}"
             android:layout_width="100dp"
             android:layout_height="0dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/bg_stroke_1"
             android:gravity="center"
-            android:text="V"
+            android:onClick="@{() -> vm.setMarkerButtonClick()}"
+            android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@id/tv_b"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/tv_b"
