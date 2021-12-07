@@ -14,18 +14,12 @@ import com.example.sample.R
 import com.example.sample.base.BaseFragment
 import com.example.sample.databinding.FragmentMapBinding
 import com.example.sample.ui.MainViewModel
-import com.example.sample.utils.makeLog
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MapFragment :
-    BaseFragment<FragmentMapBinding>(R.layout.fragment_map),
-    OnMapReadyCallback,
-    GoogleMap.OnCameraIdleListener,
-    GoogleMap.OnCameraMoveListener
-{
+class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnMapReadyCallback, GoogleMap.OnCameraIdleListener {
 
     private val viewModel by viewModels<MapViewModel>()
     private val activityViewModel by activityViewModels<MainViewModel>()
@@ -77,7 +71,6 @@ class MapFragment :
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap.apply {
             setOnCameraIdleListener(this@MapFragment)
-            setOnCameraMoveListener(this@MapFragment)
         }
 
         viewModel.onMapReady(true)
@@ -89,10 +82,6 @@ class MapFragment :
             lat = googleMap?.cameraPosition?.target?.latitude,
             lng = googleMap?.cameraPosition?.target?.longitude
         )
-    }
-
-    override fun onCameraMove() {
-        makeLog(javaClass.simpleName, "onCameraMove")
     }
 
     private fun setMap() {

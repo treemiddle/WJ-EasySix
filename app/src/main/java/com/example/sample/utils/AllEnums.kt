@@ -6,3 +6,9 @@ enum class MarkerButtonType {
     AREA_B_SELECTED,
     BOTH_SELECTED
 }
+
+enum class LocationTextType {
+    EMPTY,
+    LOCATION_A,
+    LOCATION_B
+}

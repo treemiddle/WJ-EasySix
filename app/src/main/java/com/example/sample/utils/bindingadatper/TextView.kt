@@ -4,7 +4,6 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.example.sample.R
 import com.example.sample.utils.MarkerButtonType
-import com.example.sample.utils.makeLog
 
 @BindingAdapter("setCurrentMarkerButton")
 fun TextView.bindCurrentMarkerButton(markerType: MarkerButtonType) {

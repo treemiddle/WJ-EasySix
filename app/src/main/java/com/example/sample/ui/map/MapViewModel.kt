@@ -6,7 +6,10 @@ import com.example.domain.usecase.AirQualityUseCase
 import com.example.domain.usecase.BigDataUseCase
 import com.example.sample.base.BaseViewModel
 import com.example.sample.ui.mapper.AirQualityMapper
+import com.example.sample.ui.mapper.BigDataMapper
 import com.example.sample.ui.model.airquality.AirQuality
+import com.example.sample.ui.model.bigdata.BigData
+import com.example.sample.utils.LocationTextType
 import com.example.sample.utils.MarkerButtonType
 import com.example.sample.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +33,8 @@ class MapViewModel @Inject constructor(
     private val _isLocationReady: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
     private val _locationSubject: BehaviorSubject<Pair<Double, Double>> = BehaviorSubject.create()
     private val _markerButtonSubject: Subject<Unit> = PublishSubject.create()
-    private var disposable: Disposable? = null
+    private var aqiDisposable: Disposable? = null
+    private var bigDataDisposable: Disposable? = null
 
     private val _moveCamera = MutableLiveData<Pair<Double, Double>>()
     val moveCamera: LiveData<Pair<Double, Double>>
@@ -40,9 +44,25 @@ class MapViewModel @Inject constructor(
     val airQualityModel: LiveData<AirQuality>
         get() = _airQualityModel
 
+    private val _bigDataModel = MutableLiveData<BigData>()
+    val bigDataModel: LiveData<BigData>
+        get() = _bigDataModel
+
+    private val _locationA = MutableLiveData<String>()
+    val locationA: LiveData<String>
+        get() = _locationA
+
+    private val _locationB = MutableLiveData<String>()
+    val locationB: LiveData<String>
+        get() = _locationB
+
     private val _markerButtonType = MutableLiveData(MarkerButtonType.NON_SELECTED)
     val markerButtonType: LiveData<MarkerButtonType>
         get() = _markerButtonType
+
+    private val _locationTextType = MutableLiveData(LocationTextType.EMPTY)
+    val locationTextType: LiveData<LocationTextType>
+        get() = _locationTextType
 
     init {
         registerRx()
@@ -58,13 +78,13 @@ class MapViewModel @Inject constructor(
     }
 
     fun checkCurrentLocation(lat: Double? = null, lng: Double? = null) {
-        val latLng = getLocationSubject()
+        val earlyLocation = getLocationSubject()
 
         if (lat == null && lng == null) {
-            getAqi(latLng.first, latLng.second)
+            getAqi(earlyLocation.first, earlyLocation.second)
         } else {
-            //todo 통신안할려고 잠시 막아둠
-            //getAqi(lat!!, lng!!)
+            getAqi(lat!!, lng!!)
+            _locationSubject.onNext(lat to lng)
         }
     }
 
@@ -80,6 +100,10 @@ class MapViewModel @Inject constructor(
         return _locationSubject.value ?: 0.0 to 0.0
     }
 
+    private fun getBigDta(): String {
+        return _bigDataModel.value?.locationName ?: ""
+    }
+
     private fun mapReadyObservable(): Observable<Boolean> {
         return _isMapReady.filter { isChecked -> isChecked }
     }
@@ -89,13 +113,13 @@ class MapViewModel @Inject constructor(
     }
 
     private fun getAqi(lat: Double, lng: Double) {
-        disposable?.let {
+        aqiDisposable?.let {
             if (!it.isDisposed) {
                 it.dispose()
             }
         }
 
-        disposable = airQualityUseCase.getAirQuality(lat, lng)
+        aqiDisposable = airQualityUseCase.getAirQuality(lat, lng)
             .map(AirQualityMapper::mapToPresentation)
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showLoading() }
@@ -108,27 +132,66 @@ class MapViewModel @Inject constructor(
             .addTo(compositeDisposable)
     }
 
+    private fun getLocationInfo() {
+        bigDataDisposable?.let {
+            if (!it.isDisposed) {
+                it.dispose()
+            }
+        }
+
+        bigDataDisposable = bigDataUseCase.getLocationInfo(getLocationSubject().first, getLocationSubject().second)
+            .map(BigDataMapper::mapToPresentation)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { showLoading() }
+            .doAfterTerminate { hideLoading() }
+            .subscribe({
+                setBigData(it)
+                quaterLocationTextType()
+            }, { t ->
+                makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
+            }).addTo(compositeDisposable)
+    }
+
     private fun setAirQuality(model: AirQuality) {
         _airQualityModel.value = model
     }
 
-    private fun setMarkerButtonType() {
-        when (_markerButtonType.value) {
-            MarkerButtonType.NON_SELECTED -> {
-                makeLog(javaClass.simpleName, "button type none")
-                _markerButtonType.value = MarkerButtonType.AREA_B_SELECTED
+    private fun quaterLocationTextType() {
+        when (_locationTextType.value) {
+            LocationTextType.EMPTY -> {
+                setLocationA(getBigDta())
+                setMarkerButtonType(MarkerButtonType.AREA_B_SELECTED)
+                setLocationTextType(LocationTextType.LOCATION_A)
             }
-            MarkerButtonType.AREA_A_SELECTED -> {
-                makeLog(javaClass.simpleName, "button type a: 두번째 화면으로")
+            LocationTextType.LOCATION_A -> {
+                setLocationB(getBigDta())
+                setMarkerButtonType(MarkerButtonType.BOTH_SELECTED)
+                setLocationTextType(LocationTextType.LOCATION_B)
             }
-            MarkerButtonType.AREA_B_SELECTED -> {
-                makeLog(javaClass.simpleName, "button type b: 두번째 화면으로")
-                _markerButtonType.value = MarkerButtonType.BOTH_SELECTED
-            }
-            MarkerButtonType.BOTH_SELECTED -> {
-                makeLog(javaClass.simpleName, "button type both: 세번째 화면으로")
+            LocationTextType.LOCATION_B -> {
+                // something
             }
         }
+    }
+
+    private fun setMarkerButtonType(type: MarkerButtonType) {
+        _markerButtonType.value = type
+    }
+
+    private fun setLocationTextType(type: LocationTextType) {
+        _locationTextType.value = type
+    }
+
+    private fun setBigData(model: BigData) {
+        _bigDataModel.value = model
+    }
+
+    private fun setLocationA(text: String) {
+        _locationA.value = text
+    }
+
+    private fun setLocationB(text: String) {
+        _locationB.value = text
     }
 
     private fun registerRx() {
@@ -144,7 +207,7 @@ class MapViewModel @Inject constructor(
 
             _markerButtonSubject.throttleFirst(750L, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { setMarkerButtonType() }
+                .subscribe { getLocationInfo() }
         )
     }
 

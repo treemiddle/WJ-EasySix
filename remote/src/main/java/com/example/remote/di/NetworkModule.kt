@@ -21,6 +21,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
     @Qualifier
     @Retention(AnnotationRetention.BINARY)
     annotation class AirQulityRetrofit
