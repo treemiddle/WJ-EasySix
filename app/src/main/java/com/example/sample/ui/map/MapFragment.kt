@@ -14,6 +14,7 @@ import com.example.sample.R
 import com.example.sample.base.BaseFragment
 import com.example.sample.databinding.FragmentMapBinding
 import com.example.sample.ui.MainViewModel
+import com.example.sample.utils.CAMERA_ZOOM_LEVEL
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,7 +32,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     ) { permissions ->
         val granted = permissions.entries.all { it.value == true }
 
-        // * 이 때 사용자가 위치 사용권한을 허용하지 않는 경우는 고려하지 않아도 좋습니다.
         if (granted) {
             setMap()
         }
@@ -52,7 +52,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
                 googleMap?.moveCamera(
                     CameraUpdateFactory.newLatLngZoom(
                         LatLng(it.first, it.second),
-                        16f
+                        CAMERA_ZOOM_LEVEL
                     )
                 )
             })
@@ -76,20 +76,25 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
         viewModel.onMapReady(true)
     }
 
-    // 카메라 이동 중지되고 사용자와 인터랙션이 없을 때
     override fun onCameraIdle() {
-        viewModel.checkCurrentLocation(
-            lat = googleMap?.cameraPosition?.target?.latitude,
-            lng = googleMap?.cameraPosition?.target?.longitude
-        )
+        val lat = googleMap?.cameraPosition?.target?.latitude
+        val lng = googleMap?.cameraPosition?.target?.longitude
+
+        if (lat != 0.0 && lng != 0.0) {
+            viewModel.checkCurrentLocation(
+                lat = googleMap?.cameraPosition?.target?.latitude,
+                lng = googleMap?.cameraPosition?.target?.longitude
+            )
+        }
     }
 
     private fun setMap() {
+        val location = getCurrentLocation()
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment
         mapFragment?.getMapAsync(this)
         viewModel.isReadyCheck(
-            lat = getCurrentLocation()?.latitude ?: 0.0,
-            lng = getCurrentLocation()?.longitude ?: 0.0
+            lat = location?.latitude ?: 0.0,
+            lng = location?.longitude ?: 0.0
         )
     }
 

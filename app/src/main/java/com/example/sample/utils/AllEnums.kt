@@ -7,8 +7,8 @@ enum class MarkerButtonType {
     BOTH_SELECTED
 }
 
-enum class LocationTextType {
-    EMPTY,
-    LOCATION_A,
-    LOCATION_B
+enum class CurrentTextType {
+    V_TEXT,
+    SET_B_TEXT,
+    BOOK_TEXT
 }

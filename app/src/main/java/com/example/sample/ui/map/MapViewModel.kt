@@ -9,7 +9,7 @@ import com.example.sample.ui.mapper.AirQualityMapper
 import com.example.sample.ui.mapper.BigDataMapper
 import com.example.sample.ui.model.airquality.AirQuality
 import com.example.sample.ui.model.bigdata.BigData
-import com.example.sample.utils.LocationTextType
+import com.example.sample.utils.CurrentTextType
 import com.example.sample.utils.MarkerButtonType
 import com.example.sample.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,8 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MapViewModel @Inject constructor(
     private val airQualityUseCase: AirQualityUseCase,
-    private val bigDataUseCase: BigDataUseCase
-): BaseViewModel() {
+    private val bigDataUseCase: BigDataUseCase,
+) : BaseViewModel() {
 
     private val _isMapReady: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
     private val _isLocationReady: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
@@ -60,9 +60,9 @@ class MapViewModel @Inject constructor(
     val markerButtonType: LiveData<MarkerButtonType>
         get() = _markerButtonType
 
-    private val _locationTextType = MutableLiveData(LocationTextType.EMPTY)
-    val locationTextType: LiveData<LocationTextType>
-        get() = _locationTextType
+    private val _currentTextType = MutableLiveData(CurrentTextType.V_TEXT)
+    val currentTextType: LiveData<CurrentTextType>
+        get() = _currentTextType
 
     init {
         registerRx()
@@ -73,8 +73,8 @@ class MapViewModel @Inject constructor(
     }
 
     fun isReadyCheck(lat: Double, lng: Double) {
-        _isLocationReady.onNext(true)
         _locationSubject.onNext(lat to lng)
+        _isLocationReady.onNext(true)
     }
 
     fun checkCurrentLocation(lat: Double? = null, lng: Double? = null) {
@@ -132,7 +132,7 @@ class MapViewModel @Inject constructor(
             .addTo(compositeDisposable)
     }
 
-    private fun getLocationInfo() {
+    private fun getCurrentLocation() {
         bigDataDisposable?.let {
             if (!it.isDisposed) {
                 it.dispose()
@@ -140,36 +140,51 @@ class MapViewModel @Inject constructor(
         }
 
         bigDataDisposable = bigDataUseCase.getLocationInfo(getLocationSubject().first, getLocationSubject().second)
-            .map(BigDataMapper::mapToPresentation)
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { showLoading() }
-            .doAfterTerminate { hideLoading() }
-            .subscribe({
-                setBigData(it)
-                quaterLocationTextType()
-            }, { t ->
-                makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
-            }).addTo(compositeDisposable)
+                .map(BigDataMapper::mapToPresentation)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { showLoading() }
+                .doAfterTerminate { hideLoading() }
+                .subscribe({
+                    setBigData(it)
+                    setCurrentText()
+                }, { t ->
+                    makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
+                }).addTo(compositeDisposable)
     }
 
     private fun setAirQuality(model: AirQuality) {
         _airQualityModel.value = model
     }
 
-    private fun quaterLocationTextType() {
-        when (_locationTextType.value) {
-            LocationTextType.EMPTY -> {
+    private fun getCurrentTextType(): CurrentTextType? {
+        return _currentTextType.value
+    }
+
+    private fun checkCurrentText() {
+        when (getCurrentTextType()) {
+            CurrentTextType.BOOK_TEXT -> {
+                makeLog(javaClass.simpleName, "화면이동....")
+            }
+            else -> {
+                getCurrentLocation()
+            }
+        }
+    }
+
+    private fun setCurrentText() {
+        when (getCurrentTextType()) {
+            CurrentTextType.V_TEXT -> {
                 setLocationA(getBigDta())
                 setMarkerButtonType(MarkerButtonType.AREA_B_SELECTED)
-                setLocationTextType(LocationTextType.LOCATION_A)
+                setLocationTextType(CurrentTextType.SET_B_TEXT)
             }
-            LocationTextType.LOCATION_A -> {
+            CurrentTextType.SET_B_TEXT -> {
                 setLocationB(getBigDta())
                 setMarkerButtonType(MarkerButtonType.BOTH_SELECTED)
-                setLocationTextType(LocationTextType.LOCATION_B)
+                setLocationTextType(CurrentTextType.BOOK_TEXT)
             }
-            LocationTextType.LOCATION_B -> {
-                // something
+            else -> {
+                makeLog(javaClass.simpleName, "nothing...일어날 수가 없음...")
             }
         }
     }
@@ -178,8 +193,8 @@ class MapViewModel @Inject constructor(
         _markerButtonType.value = type
     }
 
-    private fun setLocationTextType(type: LocationTextType) {
-        _locationTextType.value = type
+    private fun setLocationTextType(type: CurrentTextType) {
+        _currentTextType.value = type
     }
 
     private fun setBigData(model: BigData) {
@@ -207,7 +222,7 @@ class MapViewModel @Inject constructor(
 
             _markerButtonSubject.throttleFirst(750L, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { getLocationInfo() }
+                .subscribe { checkCurrentText() },
         )
     }
 
