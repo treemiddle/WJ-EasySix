@@ -3,6 +3,7 @@ package com.example.sample.ui.map
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.domain.usecase.AirQualityUseCase
+import com.example.domain.usecase.BigDataUseCase
 import com.example.sample.base.BaseViewModel
 import com.example.sample.ui.mapper.AirQualityMapper
 import com.example.sample.ui.model.airquality.AirQuality
@@ -21,7 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    private val airQualityUseCase: AirQualityUseCase
+    private val airQualityUseCase: AirQualityUseCase,
+    private val bigDataUseCase: BigDataUseCase
 ): BaseViewModel() {
 
     private val _isMapReady: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
@@ -99,14 +101,14 @@ class MapViewModel @Inject constructor(
             .doOnSubscribe { showLoading() }
             .doAfterTerminate { hideLoading() }
             .subscribe({
-                bindAirQuality(it)
+                setAirQuality(it)
             }, { t ->
                 makeLog(javaClass.simpleName, "getCurrentQuality fail: ${t.localizedMessage}")
             })
             .addTo(compositeDisposable)
     }
 
-    private fun bindAirQuality(model: AirQuality) {
+    private fun setAirQuality(model: AirQuality) {
         _airQualityModel.value = model
     }
 

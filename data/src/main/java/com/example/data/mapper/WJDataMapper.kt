@@ -1,7 +1,7 @@
 package com.example.data.mapper
 
-import com.example.data.model.airquality.WJDataLayerData
-import com.example.domain.model.airquality.WJDomainLayerData
+import com.example.data.model.WJDataLayerData
+import com.example.domain.model.WJDomainLayerData
 
 interface WJDataMapper<D : WJDataLayerData, Domain : WJDomainLayerData> {
 

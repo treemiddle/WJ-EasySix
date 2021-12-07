@@ -25,6 +25,9 @@ android {
 
             buildConfigField "String", "AIR_QUALITY_BASE_URL", "\"https://api.waqi.info/\""
             buildConfigField "String", "AIR_QUALITY_TOKEN", "\"4bad61ffc6674d3106c2b1aa2ff7aa539982d75c\""
+            buildConfigField "String", "BIG_DATA_BASE_URL", "\"https://api.bigdatacloud.net/\""
+            buildConfigField "String", "BIG_DATA_API_KEY", "\"1d9836f986ed4c249f3b3b73dd638695\""
+
         }
         release {
             minifyEnabled false
@@ -32,6 +35,8 @@ android {
 
             buildConfigField "String", "AIR_QUALITY_BASE_URL", "\"https://api.waqi.info/\""
             buildConfigField "String", "AIR_QUALITY_TOKEN", "\"4bad61ffc6674d3106c2b1aa2ff7aa539982d75c\""
+            buildConfigField "String", "BIG_DATA_BASE_URL", "\"https://api.bigdatacloud.net/\""
+            buildConfigField "String", "BIG_DATA_API_KEY", "\"1d9836f986ed4c249f3b3b73dd638695\""
         }
     }
     compileOptions {

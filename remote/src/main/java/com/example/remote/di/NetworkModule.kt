@@ -14,20 +14,42 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+import javax.inject.Qualifier
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class AirQulityRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class BigDataRetrofit
 
     private const val CONNECT_TIME = 3L
     private const val READ_TIME = 3L
 
+    @AirQulityRetrofit
     @Provides
     @Singleton
-    fun provideRetrofit(): Retrofit {
+    fun provideAirQualityRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.AIR_QUALITY_BASE_URL)
+            .client(provideOkHttp())
+            .addCallAdapterFactory(provideRxAdapter())
+            .addConverterFactory(GsonConverterFactory.create(provideGson()))
+            .build()
+    }
+
+    @BigDataRetrofit
+    @Provides
+    @Singleton
+    fun provideBigDataRetrofit(): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.BIG_DATA_BASE_URL)
             .client(provideOkHttp())
             .addCallAdapterFactory(provideRxAdapter())
             .addConverterFactory(GsonConverterFactory.create(provideGson()))

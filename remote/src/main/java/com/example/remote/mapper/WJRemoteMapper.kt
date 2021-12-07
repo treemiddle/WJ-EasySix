@@ -1,7 +1,7 @@
 package com.example.remote.mapper
 
-import com.example.data.model.airquality.WJDataLayerData
-import com.example.remote.model.airquality.WJRemoteLayerData
+import com.example.data.model.WJDataLayerData
+import com.example.remote.model.WJRemoteLayerData
 
 interface WJRemoteMapper<R : WJRemoteLayerData, D : WJDataLayerData> {
 

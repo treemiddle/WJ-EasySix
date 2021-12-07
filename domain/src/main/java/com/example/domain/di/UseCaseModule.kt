@@ -1,7 +1,9 @@
 package com.example.domain.di
 
 import com.example.domain.repository.AirQualityRepository
+import com.example.domain.repository.BigDataRepository
 import com.example.domain.usecase.AirQualityUseCase
+import com.example.domain.usecase.BigDataUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,6 +18,12 @@ object UseCaseModule {
     @Singleton
     fun provideAirQualityUseCase(airQualityRepository: AirQualityRepository): AirQualityUseCase {
         return AirQualityUseCase(airQualityRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideBigDataUseCase(bigDataRepository: BigDataRepository): BigDataUseCase {
+        return BigDataUseCase(bigDataRepository)
     }
 
 }
