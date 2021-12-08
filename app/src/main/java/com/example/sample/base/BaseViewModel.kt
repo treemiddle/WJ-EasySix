@@ -12,12 +12,20 @@ open class BaseViewModel : ViewModel() {
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
+    private val _isVisibleOrInvisible = MutableLiveData(true)
+    val isVisibleOrInvisible: LiveData<Boolean>
+        get() = _isVisibleOrInvisible
+
     protected fun showLoading() {
         _isLoading.value = true
     }
 
     protected fun hideLoading() {
         _isLoading.value = false
+    }
+
+    protected fun setVisibleOrInVisible(state: Boolean) {
+        _isVisibleOrInvisible.value = state
     }
 
     override fun onCleared() {

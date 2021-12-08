@@ -26,6 +26,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map), OnM
     private val activityViewModel by activityViewModels<MainViewModel>()
     private var googleMap: GoogleMap? = null
 
+    private val mapViewHandler: MapViewHandler by lazy {
+        MapViewHandler()
+    }
+
     @RequiresApi(Build.VERSION_CODES.N)
     val locationPermissionRequest = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()

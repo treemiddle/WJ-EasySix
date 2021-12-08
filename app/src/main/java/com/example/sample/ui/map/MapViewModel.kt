@@ -182,6 +182,7 @@ class MapViewModel @Inject constructor(
                 setLocationB(getBigDta())
                 setMarkerButtonType(MarkerButtonType.BOTH_SELECTED)
                 setLocationTextType(CurrentTextType.BOOK_TEXT)
+                setVisibleOrInVisible(false)
             }
             else -> {
                 makeLog(javaClass.simpleName, "nothing...일어날 수가 없음...")
