@@ -2,10 +2,13 @@ package com.example.data.di
 
 import com.example.data.AirQualityRepositoryImpl
 import com.example.data.BigDataRepositoryImpl
+import com.example.data.UserRepositoryImpl
+import com.example.data.local.UserLocalDataSource
 import com.example.data.remote.AirQualityRemoteDataSource
 import com.example.data.remote.BigDataRemoteDataSource
 import com.example.domain.repository.AirQualityRepository
 import com.example.domain.repository.BigDataRepository
+import com.example.domain.repository.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,6 +29,12 @@ object RepositoryModule {
     @Singleton
     fun provideBigDataRepository(bigDataRemoteDataSource: BigDataRemoteDataSource): BigDataRepository {
         return BigDataRepositoryImpl(bigDataRemoteDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(userLocalDataSource: UserLocalDataSource): UserRepository {
+        return UserRepositoryImpl(userLocalDataSource)
     }
 
 }

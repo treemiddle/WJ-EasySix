@@ -11,7 +11,7 @@ interface BigDataApi {
     fun getLocationInfo(
         @Query("latitude") latitude: Double,
         @Query("longitude") longitude: Double,
-        @Query("localityLanguage") localityLanguage: String = "kr"
+        @Query("localityLanguage") localityLanguage: String
     ): Single<BigDataRespons>
 
 }

@@ -8,11 +8,15 @@ import io.reactivex.Single
 import javax.inject.Inject
 
 class BigDataRepositoryImpl @Inject constructor(
-    private val bigDataRemoteDataSource: BigDataRemoteDataSource
+    private val bigDataRemoteDataSource: BigDataRemoteDataSource,
 ) : BigDataRepository {
 
-    override fun getLocationInfo(latitude: Double, longitude: Double): Single<DomainBigData> {
-        return bigDataRemoteDataSource.getLocationInfo(latitude, longitude)
+    override fun getLocationInfo(
+        latitude: Double,
+        longitude: Double,
+        language: String,
+    ): Single<DomainBigData> {
+        return bigDataRemoteDataSource.getLocationInfo(latitude, longitude, language)
             .map(DataBigDataMapper::mapToDomain)
     }
 

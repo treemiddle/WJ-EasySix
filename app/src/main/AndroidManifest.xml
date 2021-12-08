@@ -7,20 +7,22 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
+        android:name=".SampleApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:name=".SampleApplication"
         android:supportsRtl="true"
         android:theme="@style/Theme.Sample">
-        <activity android:name=".ui.MainActivity"
-            android:exported="false" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".ColdStartActivity"
-            android:noHistory="true"
-            android:exported="true">
+            android:exported="true"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,11 +30,10 @@
             </intent-filter>
         </activity>
 
-<!--        android:value="GOOGLE_MAP_API_KEY"-->
+        <!--        android:value="GOOGLE_MAP_API_KEY"-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBZ0JziJdUfjmpZ3vrW1TkMvpCVkiUXKlQ"
-            />
+            android:value="AIzaSyBZ0JziJdUfjmpZ3vrW1TkMvpCVkiUXKlQ" />
 
     </application>
 

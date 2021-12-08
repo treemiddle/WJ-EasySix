@@ -5,5 +5,10 @@ import io.reactivex.Single
 
 interface BigDataRemoteDataSource {
 
-    fun getLocationInfo(latitude: Double, longitude: Double): Single<DataBigData>
+    fun getLocationInfo(
+        latitude: Double,
+        longitude: Double,
+        language: String,
+    ): Single<DataBigData>
+
 }

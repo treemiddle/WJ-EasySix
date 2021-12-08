@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.domain.usecase.AirQualityUseCase
 import com.example.domain.usecase.BigDataUseCase
+import com.example.domain.usecase.UserUseCase
 import com.example.sample.base.BaseViewModel
 import com.example.sample.ui.mapper.AirQualityMapper
 import com.example.sample.ui.mapper.BigDataMapper
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     private val airQualityUseCase: AirQualityUseCase,
     private val bigDataUseCase: BigDataUseCase,
+    private val userUseCase: UserUseCase,
 ) : BaseViewModel() {
 
     private val _isMapReady: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
@@ -68,6 +70,7 @@ class MapViewModel @Inject constructor(
 
     init {
         registerRx()
+        setCurrentLanguage()
     }
 
     fun onMapReady(isReady: Boolean) {
@@ -134,6 +137,10 @@ class MapViewModel @Inject constructor(
         return _isLocationReady.filter { isChecked -> isChecked }
     }
 
+    private fun setCurrentLanguage() {
+        userUseCase.setLanguage(userUseCase.getCurrentLanguage())
+    }
+
     private fun getAqi(lat: Double, lng: Double) {
         aqiDisposable?.let {
             if (!it.isDisposed) {
@@ -161,17 +168,21 @@ class MapViewModel @Inject constructor(
             }
         }
 
-        bigDataDisposable = bigDataUseCase.getLocationInfo(getLocationSubject().first, getLocationSubject().second)
-                .map(BigDataMapper::mapToPresentation)
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { showLoading() }
-                .doAfterTerminate { hideLoading() }
-                .subscribe({
-                    setBigData(it)
-                    setCurrentText()
-                }, { t ->
-                    makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
-                }).addTo(compositeDisposable)
+        bigDataDisposable = bigDataUseCase.getLocationInfo(
+            latitude = getLocationSubject().first,
+            longitude = getLocationSubject().second,
+            language = userUseCase.getLanguage()
+        )
+            .map(BigDataMapper::mapToPresentation)
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { showLoading() }
+            .doAfterTerminate { hideLoading() }
+            .subscribe({
+                setBigData(it)
+                setCurrentText()
+            }, { t ->
+                makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
+            }).addTo(compositeDisposable)
     }
 
     private fun setAirQuality(model: AirQuality) {

@@ -9,8 +9,12 @@ import javax.inject.Inject
 
 class BigDataRemoteDataSourceImpl @Inject constructor(private val bigDataApi: BigDataApi) : BigDataRemoteDataSource {
 
-    override fun getLocationInfo(latitude: Double, longitude: Double): Single<DataBigData> {
-        return bigDataApi.getLocationInfo(latitude, longitude)
+    override fun getLocationInfo(
+        latitude: Double,
+        longitude: Double,
+        language: String,
+    ): Single<DataBigData> {
+        return bigDataApi.getLocationInfo(latitude, longitude, language)
             .map(RemoteBigDataMapper::mapToData)
     }
 
