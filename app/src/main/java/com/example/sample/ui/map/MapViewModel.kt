@@ -33,6 +33,8 @@ class MapViewModel @Inject constructor(
     private val _isLocationReady: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
     private val _locationSubject: BehaviorSubject<Pair<Double, Double>> = BehaviorSubject.create()
     private val _markerButtonSubject: Subject<Unit> = PublishSubject.create()
+    private val _aLocationSubejct: Subject<Unit> = PublishSubject.create()
+    private val _bLocationSubejct: Subject<Unit> = PublishSubject.create()
     private var aqiDisposable: Disposable? = null
     private var bigDataDisposable: Disposable? = null
 
@@ -90,6 +92,26 @@ class MapViewModel @Inject constructor(
 
     fun setMarkerButtonClick() {
         _markerButtonSubject.onNext(Unit)
+    }
+
+    fun locationOnClickA() {
+        _aLocationSubejct.onNext(Unit)
+    }
+
+    fun locationOnClickB() {
+        _bLocationSubejct.onNext(Unit)
+    }
+
+    private fun checkLocationTextA() {
+        if (getLocationTextA().isNullOrEmpty().not()) {
+            makeLog(javaClass.simpleName, "aaaaaaa")
+        }
+    }
+
+    private fun checkLocationTextB() {
+        if (getLocationTextB().isNullOrEmpty().not()) {
+            makeLog(javaClass.simpleName, "bbbbb")
+        }
     }
 
     private fun setMoveCamera() {
@@ -160,6 +182,14 @@ class MapViewModel @Inject constructor(
         return _currentTextType.value
     }
 
+    private fun getLocationTextA(): String? {
+        return _locationA.value
+    }
+
+    private fun getLocationTextB(): String? {
+        return _locationB.value
+    }
+
     private fun checkCurrentText() {
         when (getCurrentTextType()) {
             CurrentTextType.BOOK_TEXT -> {
@@ -224,6 +254,14 @@ class MapViewModel @Inject constructor(
             _markerButtonSubject.throttleFirst(750L, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkCurrentText() },
+
+            _aLocationSubejct.throttleFirst(750L, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { checkLocationTextA() },
+
+            _bLocationSubejct.throttleFirst(750L, TimeUnit.MILLISECONDS)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { checkLocationTextB() }
         )
     }
 

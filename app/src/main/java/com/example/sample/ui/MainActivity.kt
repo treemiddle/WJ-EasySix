@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         initObserve()
         addFragments()
-        initFragment()
+        setFragment()
 
     }
 
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun initFragment() = supportFragmentManager
+    private fun setFragment() = supportFragmentManager
         .beginTransaction().run {
             add(R.id.fl_container, mapFragment)
             add(R.id.fl_container, historyFragment)
