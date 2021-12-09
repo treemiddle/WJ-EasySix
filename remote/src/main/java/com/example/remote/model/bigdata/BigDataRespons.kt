@@ -1,7 +1,5 @@
 package com.example.remote.model.bigdata
 
-import com.example.remote.model.WJRemoteLayerData
-
 data class BigDataRespons(
     val city: String,
     val continent: String,
@@ -18,4 +16,4 @@ data class BigDataRespons(
     val postcode: String,
     val principalSubdivision: String,
     val principalSubdivisionCode: String
-) : WJRemoteLayerData
+)

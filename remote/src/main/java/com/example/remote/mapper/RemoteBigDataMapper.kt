@@ -1,16 +1,16 @@
 package com.example.remote.mapper
 
 import com.example.data.model.bigdata.DataBigData
-import com.example.remote.model.bigdata.BigDataRespons
+import com.example.remote.model.bigdata.Location
 
-object RemoteBigDataMapper : WJRemoteMapper<BigDataRespons, DataBigData> {
+object RemoteBigDataMapper : WJRemoteMapper<Location, DataBigData> {
 
-    override fun mapToRemote(from: DataBigData): BigDataRespons {
-        TODO("Not yet implemented")
+    override fun mapToRemote(from: DataBigData): Location {
+        return Location(locationName = from.locationName)
     }
 
-    override fun mapToData(from: BigDataRespons): DataBigData {
-        return DataBigData(locationName = from.locality)
+    override fun mapToData(from: Location): DataBigData {
+        return DataBigData(locationName = from.locationName)
     }
 
 }
