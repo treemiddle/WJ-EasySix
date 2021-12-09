@@ -10,9 +10,7 @@ import com.example.sample.ui.mapper.AirQualityMapper
 import com.example.sample.ui.mapper.BigDataMapper
 import com.example.sample.ui.model.airquality.AirQuality
 import com.example.sample.ui.model.bigdata.BigData
-import com.example.sample.utils.CurrentTextType
-import com.example.sample.utils.MarkerButtonType
-import com.example.sample.utils.makeLog
+import com.example.sample.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -68,6 +66,10 @@ class MapViewModel @Inject constructor(
     val currentTextType: LiveData<CurrentTextType>
         get() = _currentTextType
 
+    private val _mapLabelClick = MutableLiveData<Event<MapLabelClick>>()
+    val mapLabelClick: LiveData<Event<MapLabelClick>>
+        get() = _mapLabelClick
+
     init {
         registerRx()
         setCurrentLanguage()
@@ -107,14 +109,18 @@ class MapViewModel @Inject constructor(
 
     private fun checkLocationTextA() {
         if (getLocationTextA().isNullOrEmpty().not()) {
-            makeLog(javaClass.simpleName, "aaaaaaa")
+            moveScreen(MapLabelClick.LABEL_A)
         }
     }
 
     private fun checkLocationTextB() {
         if (getLocationTextB().isNullOrEmpty().not()) {
-            makeLog(javaClass.simpleName, "bbbbb")
+            moveScreen(MapLabelClick.LABEL_B)
         }
+    }
+
+    private fun moveScreen(clickType: MapLabelClick) {
+        _mapLabelClick.value = Event(clickType)
     }
 
     private fun setMoveCamera() {
@@ -204,7 +210,7 @@ class MapViewModel @Inject constructor(
     private fun checkCurrentText() {
         when (getCurrentTextType()) {
             CurrentTextType.BOOK_TEXT -> {
-                makeLog(javaClass.simpleName, "화면이동....")
+                moveScreen(MapLabelClick.BOOK)
             }
             else -> {
                 getCurrentLocation()

@@ -12,3 +12,9 @@ enum class CurrentTextType {
     SET_B_TEXT,
     BOOK_TEXT
 }
+
+enum class MapLabelClick {
+    LABEL_A,
+    LABEL_B,
+    BOOK
+}
