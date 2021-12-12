@@ -12,6 +12,7 @@ import com.example.sample.databinding.FragmentMapBinding
 import com.example.sample.ui.MainViewModel
 import com.example.sample.utils.EventObserver
 import com.example.sample.utils.MapLabelClick
+import com.example.sample.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -51,12 +52,16 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
             })
             mapLabelClick.observe(viewLifecycleOwner, EventObserver {
                 when (it) {
-                    MapLabelClick.LABEL_A -> { activityViewModel.moveScreen(it) }
-                    MapLabelClick.LABEL_B -> { activityViewModel.moveScreen(it) }
-                    MapLabelClick.BOOK -> { activityViewModel.moveScreen(it) }
+                    MapLabelClick.BOOK -> {
+                        makeLog(javaClass.simpleName, "${getLabelA()}")
+                        makeLog(javaClass.simpleName, "${getLabelB()}")
+                    }
+                    else -> {
+                        activityViewModel.moveScreen(it)
+                    }
                 }
+                //activityViewModel.moveScreen(it)
             })
-
         }
 
         with(activityViewModel) {

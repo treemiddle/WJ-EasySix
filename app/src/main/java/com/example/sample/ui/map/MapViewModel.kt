@@ -10,6 +10,7 @@ import com.example.sample.ui.mapper.AirQualityMapper
 import com.example.sample.ui.mapper.BigDataMapper
 import com.example.sample.ui.model.airquality.AirQuality
 import com.example.sample.ui.model.bigdata.BigData
+import com.example.sample.ui.model.view.PresentModel
 import com.example.sample.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
@@ -69,6 +70,22 @@ class MapViewModel @Inject constructor(
     private val _mapLabelClick = MutableLiveData<Event<MapLabelClick>>()
     val mapLabelClick: LiveData<Event<MapLabelClick>>
         get() = _mapLabelClick
+
+    private val _label = MutableLiveData(PresentModel())
+    val label: LiveData<PresentModel>
+        get() = _label
+
+    private val _labelA = MutableLiveData<PresentModel>()
+    val labelA: LiveData<PresentModel>
+        get() = _labelA
+
+    private val _labelB = MutableLiveData<PresentModel>()
+    val labelB: LiveData<PresentModel>
+        get() = _labelB
+
+    private var currentAqi = 0
+    private var currentLatitude = 0.0
+    private var currentLongitude = 0.0
 
     init {
         registerRx()
@@ -174,9 +191,13 @@ class MapViewModel @Inject constructor(
             }
         }
 
+        val currentAqi = getAqi()
+        val currentLatitude = getLocationSubject().first
+        val currentLongitude = getLocationSubject().second
+
         bigDataDisposable = bigDataUseCase.getLocationInfo(
-            latitude = getLocationSubject().first,
-            longitude = getLocationSubject().second,
+            latitude = currentLatitude,
+            longitude = currentLongitude,
             language = userUseCase.getLanguage()
         )
             .map(BigDataMapper::mapToPresentation)
@@ -186,6 +207,7 @@ class MapViewModel @Inject constructor(
             .subscribe({
                 setBigData(it)
                 setCurrentText()
+                setLabel(currentAqi, currentLatitude, currentLongitude, it.locationName)
             }, { t ->
                 makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
@@ -193,6 +215,10 @@ class MapViewModel @Inject constructor(
 
     private fun setAirQuality(model: AirQuality) {
         _airQualityModel.value = model
+    }
+
+    private fun getAqi(): Int {
+        return _airQualityModel.value?.aqi ?: 0
     }
 
     private fun getCurrentTextType(): CurrentTextType? {
@@ -218,18 +244,45 @@ class MapViewModel @Inject constructor(
         }
     }
 
+    fun getLabelA(): PresentModel {
+        return _labelA.value ?: PresentModel()
+    }
+
+    fun getLabelB(): PresentModel {
+        return _labelB.value ?: PresentModel()
+    }
+
+    private fun setLabelA() {
+        _labelA.value = getLabel()
+    }
+
+    private fun setLabelB() {
+        _labelB.value = getLabel()
+    }
+
+    private fun setLabel(aqi: Int, latitude: Double, longitude: Double, locationName: String) {
+        val model = PresentModel(aqi = aqi, latitude = latitude, longitude = longitude, locationName = locationName)
+        _label.value = model
+    }
+
+    private fun getLabel(): PresentModel {
+        return _label.value ?: PresentModel()
+    }
+
     private fun setCurrentText() {
         when (getCurrentTextType()) {
             CurrentTextType.V_TEXT -> {
                 setLocationA(getBigDta())
                 setMarkerButtonType(MarkerButtonType.AREA_B_SELECTED)
                 setLocationTextType(CurrentTextType.SET_B_TEXT)
+                setLabelA()
             }
             CurrentTextType.SET_B_TEXT -> {
                 setLocationB(getBigDta())
                 setMarkerButtonType(MarkerButtonType.BOTH_SELECTED)
                 setLocationTextType(CurrentTextType.BOOK_TEXT)
                 setVisibleOrInVisible(false)
+                setLabelB()
             }
             else -> {
                 makeLog(javaClass.simpleName, "nothing...일어날 수가 없음...")
@@ -268,15 +321,15 @@ class MapViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { setMoveCamera(); checkCurrentLocation() },
 
-            _markerButtonSubject.throttleFirst(750L, TimeUnit.MILLISECONDS)
+            _markerButtonSubject.throttleFirst(DEFAULT_THROTTLE_DURATION, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkCurrentText() },
 
-            _aLocationSubejct.throttleFirst(750L, TimeUnit.MILLISECONDS)
+            _aLocationSubejct.throttleFirst(DEFAULT_THROTTLE_DURATION, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkLocationTextA() },
 
-            _bLocationSubejct.throttleFirst(750L, TimeUnit.MILLISECONDS)
+            _bLocationSubejct.throttleFirst(DEFAULT_THROTTLE_DURATION, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkLocationTextB() }
         )

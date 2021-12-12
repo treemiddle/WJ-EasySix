@@ -18,4 +18,5 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     fun moveScreen(mapLabelClickType: MapLabelClick) {
         _mapLabelClick.value = Event(mapLabelClickType)
     }
+
 }

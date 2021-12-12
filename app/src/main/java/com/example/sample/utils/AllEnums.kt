@@ -18,3 +18,8 @@ enum class MapLabelClick {
     LABEL_B,
     BOOK
 }
+
+enum class LabelType {
+    A,
+    B
+}
