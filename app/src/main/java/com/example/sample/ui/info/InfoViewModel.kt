@@ -7,6 +7,7 @@ import javax.inject.Inject
 @HiltViewModel
 class InfoViewModel @Inject constructor() : BaseViewModel() {
 
+    fun saveNickName() {
 
-
+    }
 }

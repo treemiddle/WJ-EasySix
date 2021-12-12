@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
             mapLabelClick.observe(this@MainActivity, EventObserver {
                 when (it) {
                     MapLabelClick.LABEL_A -> { addFragment(R.id.container, InfoFragment(), true) }
-                    MapLabelClick.LABEL_B -> { addFragment(R.id.container, HistoryFragment(), true) }
+                    MapLabelClick.LABEL_B -> { addFragment(R.id.container, InfoFragment(), true) }
                     MapLabelClick.BOOK -> { addFragment(R.id.container, BookFragment(), true) }
                 }
             })

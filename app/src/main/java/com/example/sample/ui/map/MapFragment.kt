@@ -52,20 +52,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
             })
             mapLabelClick.observe(viewLifecycleOwner, EventObserver {
                 when (it) {
-                    MapLabelClick.BOOK -> {
-                        makeLog(javaClass.simpleName, "${getLabelA()}")
-                        makeLog(javaClass.simpleName, "${getLabelB()}")
-                    }
-                    else -> {
-                        activityViewModel.moveScreen(it)
-                    }
+                    MapLabelClick.LABEL_A -> activityViewModel.setLabelAorB(getLabelA())
+                    MapLabelClick.LABEL_B -> activityViewModel.setLabelAorB(getLabelB())
+                    else -> { }
                 }
-                //activityViewModel.moveScreen(it)
+
+                activityViewModel.moveScreen(it)
             })
-        }
-
-        with(activityViewModel) {
-
         }
     }
 

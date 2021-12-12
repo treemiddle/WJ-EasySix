@@ -5,14 +5,27 @@
 
     <data>
 
+        <import type="com.example.sample.utils.LabelType" />
+
         <variable
             name="vm"
             type="com.example.sample.ui.info.InfoViewModel" />
+
+        <variable
+            name="item"
+            type="com.example.sample.ui.model.view.PresentModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.25" />
 
         <TextView
             android:id="@+id/tv_label"
@@ -20,11 +33,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@{item.type == LabelType.A ? `A` : `B`}"
             android:textColor="@color/black"
             android:textSize="30dp"
+            app:layout_constraintEnd_toEndOf="@id/gl"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="A or B " />
+            tools:text="A" />
 
         <TextView
             android:id="@+id/tv_aqi"
@@ -32,10 +48,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
+            android:gravity="center"
             android:text="AQI : "
             android:textColor="@color/black"
             android:textSize="30dp"
-            app:layout_constraintStart_toStartOf="@id/tv_label"
+            app:layout_constraintEnd_toEndOf="@id/gl"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_label" />
 
         <TextView
@@ -43,12 +61,13 @@
             android:layout_height="0dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{item.locationName}"
             android:textSize="30dp"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@id/tv_label"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@id/tv_label"
+            app:layout_constraintStart_toEndOf="@id/gl"
             app:layout_constraintTop_toTopOf="@id/tv_label"
             tools:text="text" />
 
@@ -56,12 +75,13 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:maxLines="1"
+            android:text="@{String.valueOf(item.aqi)}"
             android:textSize="30dp"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@id/tv_aqi"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toEndOf="@id/tv_aqi"
+            app:layout_constraintStart_toEndOf="@id/gl"
             app:layout_constraintTop_toTopOf="@id/tv_aqi"
             tools:text="44" />
 
@@ -88,6 +108,9 @@
             android:layout_marginBottom="32dp"
             android:background="@drawable/bg_info_button"
             android:gravity="center"
+            android:onClick="@{() -> vm.saveNickName()}"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:text="V"
             android:textSize="28dp"
             app:layout_constraintBottom_toBottomOf="parent"

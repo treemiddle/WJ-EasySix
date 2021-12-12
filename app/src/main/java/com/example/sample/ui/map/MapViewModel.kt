@@ -9,7 +9,6 @@ import com.example.sample.base.BaseViewModel
 import com.example.sample.ui.mapper.AirQualityMapper
 import com.example.sample.ui.mapper.BigDataMapper
 import com.example.sample.ui.model.airquality.AirQuality
-import com.example.sample.ui.model.bigdata.BigData
 import com.example.sample.ui.model.view.PresentModel
 import com.example.sample.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,10 +46,6 @@ class MapViewModel @Inject constructor(
     val airQualityModel: LiveData<AirQuality>
         get() = _airQualityModel
 
-    private val _bigDataModel = MutableLiveData<BigData>()
-    val bigDataModel: LiveData<BigData>
-        get() = _bigDataModel
-
     private val _locationA = MutableLiveData<String>()
     val locationA: LiveData<String>
         get() = _locationA
@@ -70,10 +65,6 @@ class MapViewModel @Inject constructor(
     private val _mapLabelClick = MutableLiveData<Event<MapLabelClick>>()
     val mapLabelClick: LiveData<Event<MapLabelClick>>
         get() = _mapLabelClick
-
-    private val _label = MutableLiveData(PresentModel())
-    val label: LiveData<PresentModel>
-        get() = _label
 
     private val _labelA = MutableLiveData<PresentModel>()
     val labelA: LiveData<PresentModel>
@@ -148,10 +139,6 @@ class MapViewModel @Inject constructor(
         return _locationSubject.value ?: 0.0 to 0.0
     }
 
-    private fun getBigDta(): String {
-        return _bigDataModel.value?.locationName ?: ""
-    }
-
     private fun mapReadyObservable(): Observable<Boolean> {
         return _isMapReady.filter { isChecked -> isChecked }
     }
@@ -191,9 +178,9 @@ class MapViewModel @Inject constructor(
             }
         }
 
-        val currentAqi = getAqi()
-        val currentLatitude = getLocationSubject().first
-        val currentLongitude = getLocationSubject().second
+        currentAqi = getAqi()
+        currentLatitude = getLocationSubject().first
+        currentLongitude = getLocationSubject().second
 
         bigDataDisposable = bigDataUseCase.getLocationInfo(
             latitude = currentLatitude,
@@ -205,9 +192,7 @@ class MapViewModel @Inject constructor(
             .doOnSubscribe { showLoading() }
             .doAfterTerminate { hideLoading() }
             .subscribe({
-                setBigData(it)
-                setCurrentText()
-                setLabel(currentAqi, currentLatitude, currentLongitude, it.locationName)
+                setCurrentText(it.locationName)
             }, { t ->
                 makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
@@ -252,37 +237,32 @@ class MapViewModel @Inject constructor(
         return _labelB.value ?: PresentModel()
     }
 
-    private fun setLabelA() {
-        _labelA.value = getLabel()
+    private fun setLabel(type: LabelType, locationName: String): PresentModel {
+        return PresentModel(
+            type = type,
+            aqi = currentAqi,
+            latitude = currentLatitude,
+            longitude = currentLongitude,
+            locationName = locationName
+        )
     }
 
-    private fun setLabelB() {
-        _labelB.value = getLabel()
-    }
-
-    private fun setLabel(aqi: Int, latitude: Double, longitude: Double, locationName: String) {
-        val model = PresentModel(aqi = aqi, latitude = latitude, longitude = longitude, locationName = locationName)
-        _label.value = model
-    }
-
-    private fun getLabel(): PresentModel {
-        return _label.value ?: PresentModel()
-    }
-
-    private fun setCurrentText() {
+    private fun setCurrentText(locationName: String) {
         when (getCurrentTextType()) {
             CurrentTextType.V_TEXT -> {
-                setLocationA(getBigDta())
+                setLocationA(locationName)
                 setMarkerButtonType(MarkerButtonType.AREA_B_SELECTED)
                 setLocationTextType(CurrentTextType.SET_B_TEXT)
-                setLabelA()
+                _labelA.value = setLabel(LabelType.A, locationName)
+                makeLog(javaClass.simpleName, "a: ${_labelA.value}")
             }
             CurrentTextType.SET_B_TEXT -> {
-                setLocationB(getBigDta())
+                setLocationB(locationName)
                 setMarkerButtonType(MarkerButtonType.BOTH_SELECTED)
                 setLocationTextType(CurrentTextType.BOOK_TEXT)
                 setVisibleOrInVisible(false)
-                setLabelB()
+                _labelB.value = setLabel(LabelType.B, locationName)
+                makeLog(javaClass.simpleName, "b: ${_labelB.value}")
             }
             else -> {
                 makeLog(javaClass.simpleName, "nothing...일어날 수가 없음...")
@@ -296,10 +276,6 @@ class MapViewModel @Inject constructor(
 
     private fun setLocationTextType(type: CurrentTextType) {
         _currentTextType.value = type
-    }
-
-    private fun setBigData(model: BigData) {
-        _bigDataModel.value = model
     }
 
     private fun setLocationA(text: String) {
