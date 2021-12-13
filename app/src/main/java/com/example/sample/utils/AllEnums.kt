@@ -14,6 +14,7 @@ enum class CurrentTextType {
 }
 
 enum class MapLabelClick {
+    EMPTY,
     LABEL_A,
     LABEL_B,
     BOOK

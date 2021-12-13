@@ -115,6 +115,10 @@ class MapViewModel @Inject constructor(
         _bLocationSubejct.onNext(Unit)
     }
 
+    fun setUpdateLabel(item: PresentModel) {
+
+    }
+
     private fun checkLocationTextA() {
         if (getLocationTextA().isNullOrEmpty().not()) {
             moveScreen(MapLabelClick.LABEL_A)
@@ -278,11 +282,11 @@ class MapViewModel @Inject constructor(
         _currentTextType.value = type
     }
 
-    private fun setLocationA(text: String) {
+    fun setLocationA(text: String) {
         _locationA.value = text
     }
 
-    private fun setLocationB(text: String) {
+    fun setLocationB(text: String) {
         _locationB.value = text
     }
 

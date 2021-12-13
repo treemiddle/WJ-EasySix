@@ -20,12 +20,20 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     val labelAorB: LiveData<PresentModel>
         get() = _labelAorB
 
+    private val _inMemoryLabel = MutableLiveData<PresentModel>()
+    val inMemoryLabel: LiveData<PresentModel>
+        get() = _inMemoryLabel
+
     fun setLabelAorB(item: PresentModel) {
         _labelAorB.value = item
     }
 
     fun moveScreen(mapLabelClickType: MapLabelClick) {
         _mapLabelClick.value = Event(mapLabelClickType)
+    }
+
+    fun setInMemoryLabel(item: PresentModel) {
+        _inMemoryLabel.value = item
     }
 
 }

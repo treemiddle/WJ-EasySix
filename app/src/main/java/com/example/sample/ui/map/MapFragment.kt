@@ -11,8 +11,8 @@ import com.example.sample.base.BaseFragment
 import com.example.sample.databinding.FragmentMapBinding
 import com.example.sample.ui.MainViewModel
 import com.example.sample.utils.EventObserver
+import com.example.sample.utils.LabelType
 import com.example.sample.utils.MapLabelClick
-import com.example.sample.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -58,6 +58,17 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
                 }
 
                 activityViewModel.moveScreen(it)
+            })
+        }
+
+        with(activityViewModel) {
+            inMemoryLabel.observe(viewLifecycleOwner, {
+                it.nickname?.let { nick ->
+                    when (it.type) {
+                        LabelType.A -> viewModel.setLocationA(nick)
+                        LabelType.B -> viewModel.setLocationB(nick)
+                    }
+                }
             })
         }
     }
