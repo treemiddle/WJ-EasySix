@@ -19,6 +19,7 @@ import com.example.sample.utils.EventObserver
 import com.example.sample.utils.MapLabelClick
 import com.example.sample.utils.ext.getTopFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.system.exitProcess
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -96,6 +97,12 @@ class MainActivity : AppCompatActivity() {
                     hide(historyFragment)
                     hide(bookFragment)
                     hide(mapFragment)
+                    setCustomAnimations(
+                        R.anim.slide_in,
+                        R.anim.fade_out,
+                        R.anim.fade_in,
+                        R.anim.slide_out
+                    )
                     show(infoFragment)
                 }
                 is HistoryFragment -> {
@@ -108,9 +115,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun isTopFragmentConsumeBackPress() =
-        getTopFragment<BackPressHandler>()?.onBackPressed() == true
-
+    private fun isTopFragmentConsumeBackPress() = getTopFragment<BackPressHandler>()?.onBackPressed() == true
 
     override fun onBackPressed() {
         if (supportFragmentManager.backStackEntryCount == 1) {

@@ -1,8 +1,10 @@
 package com.example.sample.ui.info
 
+import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.transition.TransitionInflater
 import com.example.sample.R
 import com.example.sample.base.BaseFragment
 import com.example.sample.databinding.FragmentInfoBinding
@@ -17,9 +19,14 @@ class InfoFragment : BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
     private val viewModel by viewModels<InfoViewModel>()
     private val activityViewModel by activityViewModels<MainViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val inflater = TransitionInflater.from(requireContext())
+        enterTransition = inflater.inflateTransition(R.transition.slide_right)
+    }
+
     override fun bindViews() {
         binding.vm = viewModel
-
         activity?.onBackPressedDispatcher?.addCallback(
             this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
