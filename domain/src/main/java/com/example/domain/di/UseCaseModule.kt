@@ -2,9 +2,11 @@ package com.example.domain.di
 
 import com.example.domain.repository.AirQualityRepository
 import com.example.domain.repository.BigDataRepository
+import com.example.domain.repository.MockRepository
 import com.example.domain.repository.UserRepository
 import com.example.domain.usecase.AirQualityUseCase
 import com.example.domain.usecase.BigDataUseCase
+import com.example.domain.usecase.MockUseCase
 import com.example.domain.usecase.UserUseCase
 import dagger.Module
 import dagger.Provides
@@ -32,6 +34,12 @@ object UseCaseModule {
     @Singleton
     fun provideUserUseCase(userRepository: UserRepository): UserUseCase {
         return UserUseCase(userRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMockUseCase(mockRepository: MockRepository): MockUseCase {
+        return MockUseCase(mockRepository)
     }
 
 }

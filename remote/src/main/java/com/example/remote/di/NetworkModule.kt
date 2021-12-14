@@ -30,6 +30,10 @@ object NetworkModule {
     @Retention(AnnotationRetention.BINARY)
     annotation class BigDataRetrofit
 
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class MockRetrofit
+
     private const val CONNECT_TIME = 3L
     private const val READ_TIME = 3L
 

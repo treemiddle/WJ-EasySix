@@ -2,6 +2,7 @@ package com.example.remote.di
 
 import com.example.remote.api.AirQualityApi
 import com.example.remote.api.BigDataApi
+import com.example.remote.api.MockApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,12 @@ object ApiModule {
     @Singleton
     fun provideBigDataApi(@NetworkModule.BigDataRetrofit retrofit: Retrofit): BigDataApi {
         return retrofit.create(BigDataApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideMockApi(): MockApi {
+        return MockApiImpl()
     }
 
 }

@@ -57,7 +57,11 @@ class AppNavigatorImpl @Inject constructor(private val activity: FragmentActivit
                     hide(infoFragment)
                     show(mapFragment)
                 }
-                else -> {
+                MapLabelClick.BOOK -> {
+                    hide(historyFragment)
+                    hide(mapFragment)
+                    hide(infoFragment)
+                    show(bookFragment)
                 }
             }
         }
