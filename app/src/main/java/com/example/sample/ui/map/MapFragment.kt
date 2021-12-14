@@ -3,6 +3,7 @@ package com.example.sample.ui.map
 import android.Manifest
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
@@ -45,6 +46,13 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     override fun bindViews() {
         binding.vm = viewModel
+        activity?.onBackPressedDispatcher?.addCallback(
+            this, object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    activity?.onBackPressed()
+                }
+            }
+        )
     }
 
     override fun initObserving() {
