@@ -6,6 +6,7 @@ import com.example.sample.base.BaseViewModel
 import com.example.sample.ui.model.view.PresentModel
 import com.example.sample.utils.Event
 import com.example.sample.utils.MapLabelClick
+import com.example.sample.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
