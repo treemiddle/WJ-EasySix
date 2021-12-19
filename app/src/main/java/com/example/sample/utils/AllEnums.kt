@@ -19,7 +19,8 @@ enum class MapLabelClick {
     LABEL_B,
     BOOK,
     LAST_SCREEN,
-    RESET
+    RESET,
+
 }
 
 enum class LabelType {

@@ -39,10 +39,15 @@ class MainActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         when (navigator.currentScreen()) {
-            1 -> navigator.screenTo(MapLabelClick.EMPTY)
+            1 -> {
+                navigator.screenTo(MapLabelClick.EMPTY)
+            }
             2 -> {
                 mainViewModel.reset()
                 navigator.screenTo(MapLabelClick.RESET)
+            }
+            3 -> {
+                navigator.screenTo(MapLabelClick.EMPTY)
             }
             else -> super.onBackPressed()
         }
