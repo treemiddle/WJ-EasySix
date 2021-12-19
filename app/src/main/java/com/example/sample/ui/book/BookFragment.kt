@@ -15,7 +15,7 @@ class BookFragment : BaseFragment<FragmentBookBinding>(R.layout.fragment_book) {
 
     private val viewModel by viewModels<BookViewModel>()
     private val activityViewModel by activityViewModels<MainViewModel>()
-    private val adapter by lazy { BookAdapter() }
+    @Inject lateinit var adapter: BookAdapter
 
     override fun bindViews() {
         binding.vm = viewModel

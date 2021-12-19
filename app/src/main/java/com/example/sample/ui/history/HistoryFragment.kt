@@ -7,7 +7,6 @@ import com.example.sample.base.BaseFragment
 import com.example.sample.databinding.FragmentHistoryBinding
 import com.example.sample.ui.MainViewModel
 import com.example.sample.ui.book.BookAdapter
-import com.example.sample.ui.info.InfoFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -16,7 +15,7 @@ class HistoryFragment : BaseFragment<FragmentHistoryBinding>(R.layout.fragment_h
 
     private val activityViewModel by activityViewModels<MainViewModel>()
     private val viewModel by viewModels<HistoryViewModel>()
-    private val adapter by lazy { HistoryAdapter() }
+    @Inject lateinit var adapter: BookAdapter
 
     override fun bindViews() {
         binding.vm = viewModel

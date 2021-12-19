@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.scopes.FragmentScoped
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @InstallIn(ActivityComponent::class)
@@ -18,5 +19,17 @@ abstract class AppModule {
 
     @Binds
     abstract fun bindMainNavigator(impl: AppNavigatorImpl): AppNavigator
+
+}
+
+@InstallIn(SingletonComponent::class)
+@Module
+object AppDiModule {
+
+    @Provides
+    @Singleton
+    fun provideAdapter(): BookAdapter {
+        return BookAdapter()
+    }
 
 }
