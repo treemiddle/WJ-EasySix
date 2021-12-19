@@ -20,3 +20,7 @@ data class MockData(
     val aqi: Int,
     val name: String
 )
+
+data class Test(
+    val label: List<MockData>
+)

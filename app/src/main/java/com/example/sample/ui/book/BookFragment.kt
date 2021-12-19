@@ -8,6 +8,7 @@ import com.example.sample.databinding.FragmentBookBinding
 import com.example.sample.ui.MainViewModel
 import com.example.sample.utils.MapLabelClick
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class BookFragment : BaseFragment<FragmentBookBinding>(R.layout.fragment_book) {
@@ -26,6 +27,7 @@ class BookFragment : BaseFragment<FragmentBookBinding>(R.layout.fragment_book) {
                 adapter.submitList(it)
             })
             next.observe(viewLifecycleOwner, {
+                activityViewModel.openHistory()
                 activityViewModel.moveScreen(MapLabelClick.LAST_SCREEN)
             })
         }

@@ -65,3 +65,25 @@ fun DataRequest.mapToRemoteRequest(): RemoteMockRequest {
         )
     )
 }
+
+fun List<RemoteMockResponse>.mapToData(): List<DataResponse> {
+    return this.map {
+        DataResponse(
+            labelA = DataMockItem(
+                labelType = it.labelA.labelType,
+                latitude = it.labelA.latitude,
+                longitude = it.labelA.longitude,
+                aqi = it.labelA.aqi,
+                name = it.labelA.name
+            ),
+            labelB = DataMockItem(
+                labelType = it.labelB.labelType,
+                latitude = it.labelB.latitude,
+                longitude = it.labelB.longitude,
+                aqi = it.labelB.aqi,
+                name = it.labelB.name
+            ),
+            price = it.price
+        )
+    }
+}

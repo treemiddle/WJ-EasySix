@@ -6,6 +6,7 @@ import com.example.domain.model.mock.DomainResponse
 import com.example.sample.ui.model.mock.MockData
 import com.example.sample.ui.model.mock.MockRequest
 import com.example.sample.ui.model.mock.MockResponse
+import com.example.sample.ui.model.mock.Test
 import com.example.sample.ui.model.view.PresentModel
 import com.example.sample.utils.labelTypeToString
 
@@ -37,4 +38,48 @@ fun DomainResponse.mapToPresentation(): MockResponse {
         ),
         price = price
     )
+}
+
+fun List<DomainResponse>.mapToPresentation(): List<MockResponse> {
+    return this.map {
+        MockResponse(
+            labelA = MockData(
+                labelType = it.labelA.labelType,
+                latitude = it.labelA.latitude,
+                longitude = it.labelA.longitude,
+                aqi = it.labelA.aqi,
+                name = it.labelA.name
+            ),
+            labelB = MockData(
+                labelType = it.labelB.labelType,
+                latitude = it.labelB.latitude,
+                longitude = it.labelB.longitude,
+                aqi = it.labelB.aqi,
+                name = it.labelB.name
+            ),
+            price = it.price
+        )
+    }
+}
+
+fun List<MockResponse>.mapToDomain(): List<DomainResponse> {
+    return this.map {
+        DomainResponse(
+            labelA = DomainMockItem(
+                labelType = it.labelA.labelType,
+                latitude = it.labelA.latitude,
+                longitude = it.labelA.longitude,
+                aqi = it.labelA.aqi,
+                name = it.labelA.name
+            ),
+            labelB = DomainMockItem(
+                labelType = it.labelB.labelType,
+                latitude = it.labelB.latitude,
+                longitude = it.labelB.longitude,
+                aqi = it.labelB.aqi,
+                name = it.labelB.name
+            ),
+            price = it.price
+        )
+    }
 }

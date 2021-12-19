@@ -32,6 +32,10 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     val reset: LiveData<Unit>
         get() = _reset
 
+    private val _history = MutableLiveData<Unit>()
+    val history: LiveData<Unit>
+        get() = _history
+
     fun setLabelAorB(item: PresentModel) {
         _labelAorB.value = item
     }
@@ -50,6 +54,10 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
 
     fun reset() {
         _reset.value = Unit
+    }
+
+    fun openHistory() {
+        _history.value = Unit
     }
 
 }

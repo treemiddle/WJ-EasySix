@@ -12,4 +12,16 @@ class MockUseCase @Inject constructor(private val repository: MockRepository) {
         return repository.getAllLabels(body)
     }
 
+    fun getHistory(year: Int, month: Int): Single<List<DomainResponse>> {
+        return repository.getHistory(year, month)
+    }
+
+    fun getTotalCount(itemList: List<DomainResponse>): Int {
+        return itemList.size * 2
+    }
+
+    fun getTotalPrice(itemList: List<DomainResponse>): Double {
+        return itemList.map { it.price }.sum()
+    }
+
 }

@@ -16,4 +16,9 @@ class MockRepositoryImpl @Inject constructor(private val mockRemoteDataSource: M
             .map { it.mapToDomain() }
     }
 
+    override fun getHistory(year: Int, month: Int): Single<List<DomainResponse>> {
+        return mockRemoteDataSource.getHistory(year, month)
+            .map { it.mapToDomain() }
+    }
+
 }

@@ -18,4 +18,9 @@ class MockRemoteDataSourceImpl @Inject constructor(private val mockApi: MockApi)
             .map { it.mapToData() }
     }
 
+    override fun getHistory(year: Int, month: Int): Single<List<DataResponse>> {
+        return mockApi.getHistory(year, month)
+            .map { it.mapToData() }
+    }
+
 }

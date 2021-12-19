@@ -7,4 +7,6 @@ import io.reactivex.Single
 interface MockRepository {
 
     fun getAllLabels(body: DomainRequest): Single<DomainResponse>
+
+    fun getHistory(year: Int, month: Int): Single<List<DomainResponse>>
 }
