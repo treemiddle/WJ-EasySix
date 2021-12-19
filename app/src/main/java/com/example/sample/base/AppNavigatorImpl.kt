@@ -44,7 +44,6 @@ class AppNavigatorImpl @Inject constructor(private val activity: FragmentActivit
     }
 
     private fun replaceFragment(screen: MapLabelClick) {
-        makeLog(javaClass.simpleName, "안들어와?: $screen")
         activity.supportFragmentManager.commit {
             when (screen) {
                 MapLabelClick.LABEL_A, MapLabelClick.LABEL_B -> {
@@ -65,6 +64,12 @@ class AppNavigatorImpl @Inject constructor(private val activity: FragmentActivit
                     hide(infoFragment)
                     show(bookFragment)
                 }
+                MapLabelClick.RESET -> {
+                    hide(historyFragment)
+                    hide(bookFragment)
+                    hide(infoFragment)
+                    show(mapFragment)
+                }
                 MapLabelClick.LAST_SCREEN -> {
                     hide(bookFragment)
                     hide(mapFragment)
@@ -72,6 +77,16 @@ class AppNavigatorImpl @Inject constructor(private val activity: FragmentActivit
                     show(historyFragment)
                 }
             }
+        }
+    }
+
+    override fun currentScreen(): Int {
+        return when {
+            mapFragment.isVisible && mapFragment.isResumed -> 0
+            infoFragment.isVisible && infoFragment.isResumed -> 1
+            bookFragment.isVisible && bookFragment.isResumed -> 2
+            historyFragment.isVisible && historyFragment.isResumed -> 3
+            else -> 0
         }
     }
 

@@ -103,15 +103,14 @@
 
                 <TextView
                     android:id="@+id/tv_a"
+                    setLocationA="@{vm.locationA}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:ellipsize="end"
                     android:gravity="start|center"
-                    android:hint="A"
                     android:maxLines="1"
                     android:onClick="@{() -> vm.locationOnClickA()}"
                     android:paddingStart="8dp"
-                    android:text="@{vm.locationA}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -122,15 +121,14 @@
 
                 <TextView
                     android:id="@+id/tv_b"
+                    setLocationB="@{vm.locationB}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:ellipsize="end"
                     android:gravity="start|center"
-                    android:hint="B"
                     android:maxLines="1"
                     android:onClick="@{() -> vm.locationOnClickB()}"
                     android:paddingStart="8dp"
-                    android:text="@{vm.locationB}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/black"
                     app:layout_constraintBottom_toBottomOf="parent"

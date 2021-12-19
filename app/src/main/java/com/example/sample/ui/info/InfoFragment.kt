@@ -1,7 +1,6 @@
 package com.example.sample.ui.info
 
 import android.os.Bundle
-import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.transition.TransitionInflater
@@ -11,8 +10,6 @@ import com.example.sample.databinding.FragmentInfoBinding
 import com.example.sample.ui.MainViewModel
 import com.example.sample.ui.model.view.PresentModel
 import com.example.sample.utils.MapLabelClick
-import com.example.sample.utils.StackManager
-import com.example.sample.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,14 +26,6 @@ class InfoFragment : BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
 
     override fun bindViews() {
         binding.vm = viewModel
-
-        activity?.onBackPressedDispatcher?.addCallback(
-            this, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    activityViewModel.setBackStack(StackManager.INFO_TO_MAP)
-                }
-            }
-        )
     }
 
     override fun initObserving() {

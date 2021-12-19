@@ -2,7 +2,6 @@ package com.example.sample.ui.map
 
 import android.Manifest
 import android.os.Build
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
@@ -14,7 +13,6 @@ import com.example.sample.ui.MainViewModel
 import com.example.sample.utils.EventObserver
 import com.example.sample.utils.LabelType
 import com.example.sample.utils.MapLabelClick
-import com.example.sample.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -45,14 +43,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
 
     override fun bindViews() {
         binding.vm = viewModel
-        activity?.onBackPressedDispatcher?.addCallback(
-            this, object : OnBackPressedCallback(true) {
-                override fun handleOnBackPressed() {
-                    //activity?.onBackPressed()
-                    makeLog(javaClass.simpleName, "map back")
-                }
-            }
-        )
     }
 
     override fun initObserving() {
@@ -80,6 +70,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
                         LabelType.B -> viewModel.setLocationB(nick)
                     }
                 }
+            })
+            reset.observe(viewLifecycleOwner, {
+                viewModel.reset()
             })
         }
     }

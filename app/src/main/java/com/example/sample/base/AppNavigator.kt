@@ -7,5 +7,6 @@ interface AppNavigator {
     fun initMain()
     fun setMain()
     fun screenTo(screen: MapLabelClick)
+    fun currentScreen(): Int
 
 }

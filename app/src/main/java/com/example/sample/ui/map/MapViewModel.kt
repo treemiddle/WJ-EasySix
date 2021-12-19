@@ -46,12 +46,12 @@ class MapViewModel @Inject constructor(
     val airQualityModel: LiveData<AirQuality>
         get() = _airQualityModel
 
-    private val _locationA = MutableLiveData<String>()
-    val locationA: LiveData<String>
+    private val _locationA = MutableLiveData<String?>()
+    val locationA: LiveData<String?>
         get() = _locationA
 
-    private val _locationB = MutableLiveData<String>()
-    val locationB: LiveData<String>
+    private val _locationB = MutableLiveData<String?>()
+    val locationB: LiveData<String?>
         get() = _locationB
 
     private val _markerButtonType = MutableLiveData(MarkerButtonType.NON_SELECTED)
@@ -117,10 +117,6 @@ class MapViewModel @Inject constructor(
 
     fun locationOnClickB() {
         _bLocationSubejct.onNext(Unit)
-    }
-
-    fun setUpdateLabel(item: PresentModel) {
-
     }
 
     private fun checkLocationTextA() {
@@ -250,6 +246,14 @@ class MapViewModel @Inject constructor(
         return _labelSet.value ?: getLabelA() to getLabelB()
     }
 
+    fun reset() {
+        setLocationA(null)
+        setLocationB(null)
+        setMarkerButtonType(MarkerButtonType.NON_SELECTED)
+        _currentTextType.value = CurrentTextType.V_TEXT
+        setVisibleOrInVisible(true)
+    }
+
     private fun setBothLabel() {
         _labelSet.value = getLabelA() to getLabelB()
     }
@@ -295,11 +299,11 @@ class MapViewModel @Inject constructor(
         _currentTextType.value = type
     }
 
-    fun setLocationA(text: String) {
+    fun setLocationA(text: String?) {
         _locationA.value = text
     }
 
-    fun setLocationB(text: String) {
+    fun setLocationB(text: String?) {
         _locationB.value = text
     }
 

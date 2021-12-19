@@ -18,19 +18,13 @@ enum class MapLabelClick {
     LABEL_A,
     LABEL_B,
     BOOK,
-    LAST_SCREEN
+    LAST_SCREEN,
+    RESET
 }
 
 enum class LabelType {
     A,
     B
-}
-
-enum class StackManager {
-    NORMAL,
-    MAP_TO_MAP,
-    INFO_TO_MAP,
-    BOOK_TO_MAP
 }
 
 fun labelTypeToString(type: LabelType): String {

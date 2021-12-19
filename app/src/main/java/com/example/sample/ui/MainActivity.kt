@@ -2,7 +2,6 @@ package com.example.sample.ui
 
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.example.sample.R
@@ -10,8 +9,6 @@ import com.example.sample.base.AppNavigator
 import com.example.sample.databinding.ActivityMainBinding
 import com.example.sample.utils.EventObserver
 import com.example.sample.utils.MapLabelClick
-import com.example.sample.utils.StackManager
-import com.example.sample.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -41,19 +38,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        when (mainViewModel.getBackStack()) {
-            StackManager.MAP_TO_MAP -> {
-                super.onBackPressed()
+        when (navigator.currentScreen()) {
+            1 -> navigator.screenTo(MapLabelClick.EMPTY)
+            2 -> {
+                mainViewModel.reset()
+                navigator.screenTo(MapLabelClick.RESET)
             }
-            StackManager.INFO_TO_MAP -> {
-                navigator.screenTo(MapLabelClick.EMPTY)
-            }
-            StackManager.BOOK_TO_MAP -> {
-                navigator.screenTo(MapLabelClick.EMPTY)
-            }
-            StackManager.NORMAL -> {
-                super.onBackPressed()
-            }
+            else -> super.onBackPressed()
         }
     }
 }
