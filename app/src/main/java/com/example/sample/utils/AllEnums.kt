@@ -17,10 +17,33 @@ enum class MapLabelClick {
     EMPTY,
     LABEL_A,
     LABEL_B,
-    BOOK
+    BOOK,
+    LAST_SCREEN
 }
 
 enum class LabelType {
     A,
     B
+}
+
+enum class StackManager {
+    NORMAL,
+    MAP_TO_MAP,
+    INFO_TO_MAP,
+    BOOK_TO_MAP
+}
+
+fun labelTypeToString(type: LabelType): String {
+    return when (type) {
+        LabelType.A -> "A"
+        LabelType.B -> "B"
+    }
+}
+
+fun stringToLabelType(string: String): LabelType {
+    return when (string) {
+        "A" -> LabelType.A
+        "B" -> LabelType.B
+        else -> LabelType.A
+    }
 }

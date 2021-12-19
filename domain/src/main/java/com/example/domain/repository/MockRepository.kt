@@ -1,9 +1,10 @@
 package com.example.domain.repository
 
-import com.example.domain.model.mock.DomainMockResponse
+import com.example.domain.model.mock.DomainResponse
+import com.example.domain.model.mock.DomainRequest
 import io.reactivex.Single
 
 interface MockRepository {
 
-    fun getAllLabels(body: DomainMockResponse): Single<DomainMockResponse>
+    fun getAllLabels(body: DomainRequest): Single<DomainResponse>
 }

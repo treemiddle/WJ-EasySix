@@ -6,6 +6,7 @@ import com.example.sample.base.BaseViewModel
 import com.example.sample.ui.model.view.PresentModel
 import com.example.sample.utils.Event
 import com.example.sample.utils.MapLabelClick
+import com.example.sample.utils.StackManager
 import com.example.sample.utils.makeLog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -25,6 +26,14 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
     val inMemoryLabel: LiveData<PresentModel>
         get() = _inMemoryLabel
 
+    private val _labelSet = MutableLiveData<Pair<PresentModel, PresentModel>>()
+    val labelSet: LiveData<Pair<PresentModel, PresentModel>>
+        get() = _labelSet
+
+    private val _backPressed = MutableLiveData<StackManager>()
+    val backPressed: LiveData<StackManager>
+        get() = _backPressed
+
     fun setLabelAorB(item: PresentModel) {
         _labelAorB.value = item
     }
@@ -35,6 +44,18 @@ class MainViewModel @Inject constructor() : BaseViewModel() {
 
     fun setInMemoryLabel(item: PresentModel) {
         _inMemoryLabel.value = item
+    }
+
+    fun setBothLabel(item: Pair<PresentModel, PresentModel>) {
+        _labelSet.value = item
+    }
+
+    fun setBackStack(type: StackManager) {
+        _backPressed.value = type
+    }
+
+    fun getBackStack(): StackManager {
+        return _backPressed.value ?: StackManager.NORMAL
     }
 
 }

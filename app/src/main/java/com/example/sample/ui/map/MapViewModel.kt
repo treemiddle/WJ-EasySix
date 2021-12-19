@@ -74,6 +74,10 @@ class MapViewModel @Inject constructor(
     val labelB: LiveData<PresentModel>
         get() = _labelB
 
+    private val _labelSet = MutableLiveData<Pair<PresentModel, PresentModel>>()
+    val labelSet: LiveData<Pair<PresentModel, PresentModel>>
+        get() = _labelSet
+
     private var currentAqi = 0
     private var currentLatitude = 0.0
     private var currentLongitude = 0.0
@@ -225,6 +229,7 @@ class MapViewModel @Inject constructor(
     private fun checkCurrentText() {
         when (getCurrentTextType()) {
             CurrentTextType.BOOK_TEXT -> {
+                setBothLabel()
                 moveScreen(MapLabelClick.BOOK)
             }
             else -> {
@@ -239,6 +244,14 @@ class MapViewModel @Inject constructor(
 
     fun getLabelB(): PresentModel {
         return _labelB.value ?: PresentModel()
+    }
+
+    fun getBothLabel(): Pair<PresentModel, PresentModel> {
+        return _labelSet.value ?: getLabelA() to getLabelB()
+    }
+
+    private fun setBothLabel() {
+        _labelSet.value = getLabelA() to getLabelB()
     }
 
     private fun setLabel(type: LabelType, locationName: String): PresentModel {

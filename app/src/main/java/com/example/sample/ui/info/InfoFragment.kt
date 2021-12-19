@@ -11,6 +11,7 @@ import com.example.sample.databinding.FragmentInfoBinding
 import com.example.sample.ui.MainViewModel
 import com.example.sample.ui.model.view.PresentModel
 import com.example.sample.utils.MapLabelClick
+import com.example.sample.utils.StackManager
 import com.example.sample.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -28,11 +29,11 @@ class InfoFragment : BaseFragment<FragmentInfoBinding>(R.layout.fragment_info) {
 
     override fun bindViews() {
         binding.vm = viewModel
+
         activity?.onBackPressedDispatcher?.addCallback(
             this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    makeLog(javaClass.simpleName, "info back")
-                    activityViewModel.moveScreen(MapLabelClick.EMPTY)
+                    activityViewModel.setBackStack(StackManager.INFO_TO_MAP)
                 }
             }
         )

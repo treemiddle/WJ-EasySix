@@ -9,6 +9,8 @@ import com.example.sample.R
 import com.example.sample.base.AppNavigator
 import com.example.sample.databinding.ActivityMainBinding
 import com.example.sample.utils.EventObserver
+import com.example.sample.utils.MapLabelClick
+import com.example.sample.utils.StackManager
 import com.example.sample.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -39,12 +41,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        makeLog(javaClass.simpleName, "main back")
-//        val dialog = AlertDialog.Builder(this)
-//        dialog.setTitle("종료하시겠습니까?")
-//            .setPositiveButton("예") { _, _ -> this.finish() }
-//            .setNegativeButton("아니요") { _, _ -> }
-//        dialog.create()
-//        dialog.show()
+        when (mainViewModel.getBackStack()) {
+            StackManager.MAP_TO_MAP -> {
+                super.onBackPressed()
+            }
+            StackManager.INFO_TO_MAP -> {
+                navigator.screenTo(MapLabelClick.EMPTY)
+            }
+            StackManager.BOOK_TO_MAP -> {
+                navigator.screenTo(MapLabelClick.EMPTY)
+            }
+            StackManager.NORMAL -> {
+                super.onBackPressed()
+            }
+        }
     }
 }

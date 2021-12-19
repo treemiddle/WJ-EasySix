@@ -64,6 +64,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
                 when (it) {
                     MapLabelClick.LABEL_A -> activityViewModel.setLabelAorB(getLabelA())
                     MapLabelClick.LABEL_B -> activityViewModel.setLabelAorB(getLabelB())
+                    MapLabelClick.BOOK -> activityViewModel.setBothLabel(getBothLabel())
                     else -> { }
                 }
 

@@ -8,6 +8,7 @@ import com.example.sample.ui.history.HistoryFragment
 import com.example.sample.ui.info.InfoFragment
 import com.example.sample.ui.map.MapFragment
 import com.example.sample.utils.MapLabelClick
+import com.example.sample.utils.makeLog
 import javax.inject.Inject
 
 class AppNavigatorImpl @Inject constructor(private val activity: FragmentActivity) : AppNavigator {
@@ -43,6 +44,7 @@ class AppNavigatorImpl @Inject constructor(private val activity: FragmentActivit
     }
 
     private fun replaceFragment(screen: MapLabelClick) {
+        makeLog(javaClass.simpleName, "안들어와?: $screen")
         activity.supportFragmentManager.commit {
             when (screen) {
                 MapLabelClick.LABEL_A, MapLabelClick.LABEL_B -> {
@@ -62,6 +64,12 @@ class AppNavigatorImpl @Inject constructor(private val activity: FragmentActivit
                     hide(mapFragment)
                     hide(infoFragment)
                     show(bookFragment)
+                }
+                MapLabelClick.LAST_SCREEN -> {
+                    hide(bookFragment)
+                    hide(mapFragment)
+                    hide(infoFragment)
+                    show(historyFragment)
                 }
             }
         }
