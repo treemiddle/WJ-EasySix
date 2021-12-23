@@ -1,5 +1,6 @@
 package com.example.data.local
 
+import com.example.common.LabelType
 import com.example.data.model.FinalDataModel
 import com.example.domain.model.FinalDomainModel
 import io.reactivex.Completable

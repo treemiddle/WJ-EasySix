@@ -1,5 +1,6 @@
 package com.example.remote.model.bigdata
 
+import com.example.common.LabelType
 import com.example.remote.model.WJRemoteLayerData
 
 data class Administrative(
@@ -14,6 +15,7 @@ data class Administrative(
 )
 
 data class Location(
+    val type: LabelType? = null,
     val aqi: Int = 0,
     val locationName: String,
     val latitude: Double = 0.0,

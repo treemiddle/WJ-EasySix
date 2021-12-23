@@ -1,5 +1,6 @@
 package com.example.data.remote
 
+import com.example.common.LabelType
 import com.example.data.model.FinalDataModel
 import com.example.data.model.airquality.DataAirQuality
 import com.example.data.model.bigdata.DataBigData
@@ -10,6 +11,7 @@ interface FinalRemoteDataSource {
     fun getAirQuality(lat: Double, lng: Double): Single<FinalDataModel>
 
     fun getLocationInfo(
+        type: LabelType,
         aqi: Int,
         latitude: Double,
         longitude: Double,

@@ -1,5 +1,7 @@
 package com.example.data
 
+import com.example.common.LabelType
+import com.example.data.ext.floor3
 import com.example.data.local.FinalLocalSource
 import com.example.data.mapper.DataAirQualityMapper
 import com.example.data.mapper.mapToData
@@ -27,23 +29,25 @@ class FinalRepositoryImpl @Inject constructor(
     }
 
     override fun getLocationInfo(
+        type: LabelType,
         aqi: Int,
         latitude: Double,
         longitude: Double,
         language: String,
     ): Single<FinalDomainModel> {
-        return localDataSource.getLabel(latitude, longitude)
+        return localDataSource.getLabel(latitude.floor3(), longitude.floor3())
             .subscribeOn(Schedulers.io())
             .onErrorReturn {
                 FinalDataModel(
+                    type = type,
                     aqi = aqi,
                     latitude = latitude,
-                    longitude = longitude
+                    longitude = longitude,
                 )
             }
             .flatMap { cachedLabel ->
                 if (cachedLabel.locationName.isNullOrEmpty()) {
-                    getRemoteLabel(aqi, latitude, longitude, language)
+                    getRemoteLabel(type, aqi, latitude, longitude, language)
                         .map { it }
                 } else {
                     Single.just(cachedLabel.mapToDomain())
@@ -52,17 +56,19 @@ class FinalRepositoryImpl @Inject constructor(
     }
 
     private fun getRemoteLabel(
+        type: LabelType,
         aqi: Int,
         latitude: Double,
         longitude: Double,
         language: String,
     ): Single<FinalDomainModel> {
-        return remoteDataSource.getLocationInfo(aqi, latitude, longitude, language)
+        return remoteDataSource.getLocationInfo(type, aqi, latitude, longitude, language)
             .flatMap { remoteLabel ->
-                localDataSource.insertLabel(remoteLabel)
+                val newLabel = remoteLabel.copy(latitude = latitude.floor3(), longitude = longitude.floor3())
+
+                localDataSource.insertLabel(newLabel)
                     .andThen(Single.just(remoteLabel.mapToDomain()))
             }
     }
-
 
 }

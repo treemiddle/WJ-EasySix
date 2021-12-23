@@ -1,5 +1,6 @@
 package com.example.remote
 
+import com.example.common.LabelType
 import com.example.data.model.FinalDataModel
 import com.example.data.remote.FinalRemoteDataSource
 import com.example.remote.api.AirQualityApi
@@ -20,6 +21,7 @@ class FinalRemoteDataSourceImpl @Inject constructor(
     }
 
     override fun getLocationInfo(
+        type: LabelType,
         aqi: Int,
         latitude: Double,
         longitude: Double,
@@ -30,6 +32,7 @@ class FinalRemoteDataSourceImpl @Inject constructor(
                 val orderList = orderSort.localityInfo.administrative.sortedBy { it.order }.reversed()
                 Single.just(
                     Location(
+                        type = type,
                         aqi = aqi,
                         locationName = "${orderList[1].name}, ${orderList[0].name}",
                         latitude = latitude,

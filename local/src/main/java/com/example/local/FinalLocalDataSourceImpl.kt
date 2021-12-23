@@ -1,5 +1,6 @@
 package com.example.local
 
+import com.example.common.LabelType
 import com.example.data.local.FinalLocalSource
 import com.example.data.model.FinalDataModel
 import com.example.local.dao.LabelDao

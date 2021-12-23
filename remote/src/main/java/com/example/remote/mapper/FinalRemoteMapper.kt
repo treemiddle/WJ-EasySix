@@ -10,6 +10,8 @@ fun AirQualityResponse.mapToData(): FinalDataModel {
 
 fun Location.mapToData(): FinalDataModel {
     return FinalDataModel(
+        aqi = aqi,
+        type = type,
         locationName = locationName,
         latitude = latitude,
         longitude = longitude

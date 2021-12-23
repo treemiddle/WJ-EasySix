@@ -1,14 +1,15 @@
 package com.example.sample.ui.mapper
 
+import com.example.common.LabelType
+import com.example.common.labelTypeToString
+import com.example.common.stringToLabelType
 import com.example.data.model.FinalDataModel
 import com.example.domain.model.FinalDomainModel
 import com.example.sample.ui.model.view.PresentModel
-import com.example.sample.utils.labelTypeToString
-import com.example.sample.utils.stringToLabelType
 
 fun PresentModel.mapToDomain(): FinalDomainModel {
     return FinalDomainModel(
-        type = labelTypeToString(type),
+        type = type,
         aqi = aqi,
         latitude = latitude,
         longitude = longitude,
@@ -19,7 +20,7 @@ fun PresentModel.mapToDomain(): FinalDomainModel {
 
 fun FinalDomainModel.mapToPresentation(): PresentModel {
     return PresentModel(
-        type = stringToLabelType(type),
+        type = type ?: LabelType.A,
         aqi = aqi,
         latitude = latitude,
         longitude = longitude,

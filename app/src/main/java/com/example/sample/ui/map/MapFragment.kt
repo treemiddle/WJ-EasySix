@@ -6,12 +6,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import com.example.common.LabelType
 import com.example.sample.R
 import com.example.sample.base.BaseFragment
 import com.example.sample.databinding.FragmentMapBinding
 import com.example.sample.ui.MainViewModel
 import com.example.sample.utils.EventObserver
-import com.example.sample.utils.LabelType
 import com.example.sample.utils.MapLabelClick
 import dagger.hilt.android.AndroidEntryPoint
 

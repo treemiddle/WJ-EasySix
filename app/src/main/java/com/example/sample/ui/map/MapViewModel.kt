@@ -2,6 +2,7 @@ package com.example.sample.ui.map
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.common.LabelType
 import com.example.domain.usecase.AirQualityUseCase
 import com.example.domain.usecase.BigDataUseCase
 import com.example.domain.usecase.FinalUseCase
@@ -83,6 +84,10 @@ class MapViewModel @Inject constructor(
     val labelSet: LiveData<Pair<PresentModel, PresentModel>>
         get() = _labelSet
 
+    private val _labelType = MutableLiveData<LabelType?>()
+    val labelType: LiveData<LabelType?>
+        get() = _labelType
+
     private var currentAqi = 0
     private var currentLatitude = 0.0
     private var currentLongitude = 0.0
@@ -160,6 +165,14 @@ class MapViewModel @Inject constructor(
         userUseCase.setLanguage(userUseCase.getCurrentLanguage())
     }
 
+    private fun getLabelType(): LabelType {
+        return _labelType.value ?: LabelType.A
+    }
+
+    private fun setLabelType(type: LabelType?) {
+        _labelType.value = type
+    }
+
     private fun getAqi(lat: Double, lng: Double) {
         aqiDisposable?.let {
             if (!it.isDisposed) {
@@ -192,6 +205,7 @@ class MapViewModel @Inject constructor(
         currentLongitude = getLocationSubject().second
 
         bigDataDisposable = finalUseCase.getLocationInfo(
+            type = getLabelType(),
             aqi = currentAqi,
             latitude = currentLatitude,
             longitude = currentLongitude,
@@ -255,6 +269,7 @@ class MapViewModel @Inject constructor(
     }
 
     fun reset() {
+        setLabelType(null)
         setLocationA(null)
         setLocationB(null)
         setMarkerButtonType(MarkerButtonType.NON_SELECTED)
@@ -279,6 +294,7 @@ class MapViewModel @Inject constructor(
     private fun setCurrentText(locationName: String) {
         when (getCurrentTextType()) {
             CurrentTextType.V_TEXT -> {
+                setLabelType(LabelType.B)
                 setLocationA(locationName)
                 setMarkerButtonType(MarkerButtonType.AREA_B_SELECTED)
                 setLocationTextType(CurrentTextType.SET_B_TEXT)
