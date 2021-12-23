@@ -1,6 +1,8 @@
 package com.example.local.di
 
 import android.content.Context
+import androidx.room.Room
+import com.example.local.database.WJDatabase
 import com.example.local.prefs.PrefsHelper
 import com.example.local.prefs.PrefsHelperImpl
 import dagger.Module
@@ -20,6 +22,18 @@ object LocalModule {
         @ApplicationContext applicationContext: Context
     ): PrefsHelper {
         return PrefsHelperImpl(applicationContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideDatabase(
+        @ApplicationContext applicationContext: Context
+    ): WJDatabase {
+        return Room.databaseBuilder(
+            applicationContext,
+            WJDatabase::class.java, "wj_database"
+        )
+            .build()
     }
 
 }
