@@ -53,7 +53,9 @@ ext {
 
             googlemap_plugin  : '2.0.0',
 
-            googlemap         : '18.0.0'
+            googlemap         : '18.0.0',
+
+            room_version      : '2.4.0'
     ]
 
     deps = [
@@ -127,6 +129,14 @@ ext {
 
             androidx: [
                     core_ktx: "androidx.core:core-ktx:$versions.androidx.core_ktx"
+            ],
+
+            room    : [
+                    room_rxjava  : "androidx.room:room-rxjava2:$versions.room_version",
+                    room_runtime : "androidx.room:room-runtime:$versions.room_version",
+                    room_compiler: "androidx.room:room-compiler:: $versions.room_version",
+                    room_ktx     : "androidx.room:room-ktx:$versions.room_version",
+                    room_testing : "androidx.room:room-testing:$versions.room_version"
             ]
     ]
 

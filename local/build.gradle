@@ -40,4 +40,10 @@ dependencies {
     api local.hilt.hilt
     kapt local.hilt.compiler
     kapt local.hilt.hilt_compiler
+
+    implementation local.room.room_runtime
+    implementation local.room.room_rxjava
+    kapt local.room.room_compiler
+    implementation local.room.room_ktx
+    testImplementation local.room.room_testing
 }

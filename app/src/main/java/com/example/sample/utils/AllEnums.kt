@@ -20,7 +20,6 @@ enum class MapLabelClick {
     BOOK,
     LAST_SCREEN,
     RESET,
-
 }
 
 enum class LabelType {
