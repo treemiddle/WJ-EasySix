@@ -50,6 +50,7 @@ android {
 
 dependencies {
     implementation project(":data")
+    implementation project(":common")
 
     api remote.rx.java
 
