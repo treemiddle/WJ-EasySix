@@ -6,13 +6,14 @@ import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import androidx.room.Update
 import com.example.local.model.LabelEntity
+import io.reactivex.Completable
 import io.reactivex.Single
 
 @Dao
 interface LabelDao {
 
     @Insert(onConflict = REPLACE)
-    fun insertLabel(label: LabelEntity)
+    fun insertLabel(label: LabelEntity): Completable
 
     @Update
     fun updateLabel(label: LabelEntity)

@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "label")
 data class LabelEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
-    val type: String,
+    val id: Long = 0L,
+    val type: String?,
     val aqi: Int,
     val latitude: Double,
     val longitude: Double,

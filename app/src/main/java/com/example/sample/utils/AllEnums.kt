@@ -34,7 +34,7 @@ fun labelTypeToString(type: LabelType): String {
     }
 }
 
-fun stringToLabelType(string: String): LabelType {
+fun stringToLabelType(string: String?): LabelType {
     return when (string) {
         "A" -> LabelType.A
         "B" -> LabelType.B

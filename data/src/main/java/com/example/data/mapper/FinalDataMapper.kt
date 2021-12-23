@@ -1,10 +1,10 @@
-package com.example.local.mapper
+package com.example.data.mapper
 
 import com.example.data.model.FinalDataModel
-import com.example.local.model.LabelEntity
+import com.example.domain.model.FinalDomainModel
 
-fun LabelEntity.mapToModel(): FinalDataModel {
-    return FinalDataModel(
+fun FinalDataModel.mapToDomain(): FinalDomainModel {
+    return FinalDomainModel(
         type = type,
         aqi = aqi,
         latitude = latitude,
@@ -14,8 +14,8 @@ fun LabelEntity.mapToModel(): FinalDataModel {
     )
 }
 
-fun FinalDataModel.mapToData(): LabelEntity {
-    return LabelEntity(
+fun FinalDomainModel.mapToData(): FinalDataModel {
+    return FinalDataModel(
         type = type,
         aqi = aqi,
         latitude = latitude,
