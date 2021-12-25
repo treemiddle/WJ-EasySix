@@ -100,10 +100,9 @@
                     app:layout_constraintStart_toStartOf="@id/gl_vertical"
                     app:layout_constraintTop_toTopOf="parent" />
 
-
                 <TextView
                     android:id="@+id/tv_a"
-                    setLocationA="@{vm.locationA}"
+                    setLocationA="@{vm.nicknameA}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:ellipsize="end"
@@ -121,7 +120,7 @@
 
                 <TextView
                     android:id="@+id/tv_b"
-                    setLocationB="@{vm.locationB}"
+                    setLocationB="@{vm.nicknameB}"
                     android:layout_width="0dp"
                     android:layout_height="50dp"
                     android:ellipsize="end"

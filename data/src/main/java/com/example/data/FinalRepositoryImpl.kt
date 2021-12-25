@@ -12,6 +12,7 @@ import com.example.domain.model.FinalDomainModel
 import com.example.domain.model.airquality.DomainAirQuality
 import com.example.domain.model.bigdata.DomainBigData
 import com.example.domain.repository.FinalRepository
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
@@ -55,6 +56,14 @@ class FinalRepositoryImpl @Inject constructor(
             }
     }
 
+    override fun updateLabel(label: FinalDomainModel): Completable {
+        return Completable.fromSingle(localDataSource.findLabel(label.mapToData()))
+    }
+
+    override fun deleteAll(): Completable {
+        return localDataSource.deleteAll()
+    }
+
     private fun getRemoteLabel(
         type: LabelType,
         aqi: Int,
@@ -67,7 +76,7 @@ class FinalRepositoryImpl @Inject constructor(
                 val newLabel = remoteLabel.copy(latitude = latitude.floor3(), longitude = longitude.floor3())
 
                 localDataSource.insertLabel(newLabel)
-                    .andThen(Single.just(remoteLabel.mapToDomain()))
+                    .andThen(Single.just(newLabel.mapToDomain()))
             }
     }
 

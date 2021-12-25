@@ -3,6 +3,7 @@ package com.example.domain.usecase
 import com.example.common.LabelType
 import com.example.domain.model.FinalDomainModel
 import com.example.domain.repository.FinalRepository
+import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -20,6 +21,14 @@ class FinalUseCase @Inject constructor(private val repository: FinalRepository) 
         language: String,
     ): Single<FinalDomainModel> {
         return repository.getLocationInfo(type, aqi, latitude, longitude, language)
+    }
+
+    fun updateLabel(label: FinalDomainModel): Completable {
+        return repository.updateLabel(label)
+    }
+
+    fun deleteAll(): Completable {
+        return repository.deleteAll()
     }
 
 }

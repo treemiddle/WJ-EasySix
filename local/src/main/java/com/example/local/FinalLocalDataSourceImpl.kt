@@ -7,8 +7,11 @@ import com.example.local.dao.LabelDao
 import com.example.local.mapper.mapToData
 import com.example.local.mapper.mapToModel
 import com.example.local.model.LabelEntity
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.internal.operators.completable.CompletableFromSingle
 import javax.inject.Inject
 
 class FinalLocalDataSourceImpl @Inject constructor(
@@ -24,4 +27,18 @@ class FinalLocalDataSourceImpl @Inject constructor(
             .map { it.mapToModel() }
     }
 
+    override fun findLabel(model: FinalDataModel): Single<FinalDataModel> {
+        val newModel = model.mapToData()
+
+        return labelDao.getLabel(newModel.latitude, newModel.longitude)
+            .map { label -> label.copy(nickname = newModel.nickname) }
+            .flatMap {
+                labelDao.updateLabel(it)
+                    .andThen(Single.just(it.mapToModel()))
+            }
+    }
+
+    override fun deleteAll(): Completable {
+        return labelDao.deleteAll()
+    }
 }
