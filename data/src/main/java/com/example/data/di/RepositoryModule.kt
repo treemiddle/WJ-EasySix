@@ -1,21 +1,18 @@
 package com.example.data.di
 
-import com.example.data.AirQualityRepositoryImpl
-import com.example.data.BigDataRepositoryImpl
-import com.example.data.MockRepositoryImpl
-import com.example.data.UserRepositoryImpl
+import com.example.data.*
+import com.example.data.local.FinalLocalSource
 import com.example.data.local.UserLocalDataSource
 import com.example.data.remote.AirQualityRemoteDataSource
 import com.example.data.remote.BigDataRemoteDataSource
+import com.example.data.remote.FinalRemoteDataSource
 import com.example.data.remote.MockRemoteDataSource
-import com.example.domain.repository.AirQualityRepository
-import com.example.domain.repository.BigDataRepository
-import com.example.domain.repository.MockRepository
-import com.example.domain.repository.UserRepository
+import com.example.domain.repository.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import dagger.multibindings.ElementsIntoSet
 import javax.inject.Singleton
 
 @Module
@@ -44,6 +41,15 @@ object RepositoryModule {
     @Singleton
     fun provideMockRepository(mockRemoteDataSource: MockRemoteDataSource): MockRepository {
         return MockRepositoryImpl(mockRemoteDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFinalRepository(
+        remoteDataSource: FinalRemoteDataSource,
+        localDataSource: FinalLocalSource
+    ): FinalRepository {
+        return FinalRepositoryImpl(remoteDataSource, localDataSource)
     }
 
 }

@@ -1,11 +1,12 @@
 package com.example.domain.model
 
+import com.example.common.LabelType
+
 data class FinalDomainModel(
-    val id: Long,
-    val type: String,
-    val aqi: Int,
-    val latitude: Double,
-    val longitude: Double,
-    val nickname: String?,
-    val locationName: String?
+    val type: LabelType? = null,
+    val aqi: Int = 0,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+    val nickname: String? = null,
+    val locationName: String? = null
 ) : WJDomainLayerData

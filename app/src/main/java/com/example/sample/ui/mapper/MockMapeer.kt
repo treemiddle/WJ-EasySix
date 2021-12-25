@@ -1,5 +1,6 @@
 package com.example.sample.ui.mapper
 
+import com.example.common.labelTypeToString
 import com.example.domain.model.mock.DomainMockItem
 import com.example.domain.model.mock.DomainRequest
 import com.example.domain.model.mock.DomainResponse
@@ -8,7 +9,6 @@ import com.example.sample.ui.model.mock.MockRequest
 import com.example.sample.ui.model.mock.MockResponse
 import com.example.sample.ui.model.mock.Test
 import com.example.sample.ui.model.view.PresentModel
-import com.example.sample.utils.labelTypeToString
 
 fun PresentModel.mapToMock(): DomainMockItem {
     return DomainMockItem(

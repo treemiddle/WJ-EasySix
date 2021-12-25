@@ -2,9 +2,11 @@ package com.example.remote.di
 
 import com.example.data.remote.AirQualityRemoteDataSource
 import com.example.data.remote.BigDataRemoteDataSource
+import com.example.data.remote.FinalRemoteDataSource
 import com.example.data.remote.MockRemoteDataSource
 import com.example.remote.AirQualityRemoteDataSourceImpl
 import com.example.remote.BigDataRemoteDataSourceImpl
+import com.example.remote.FinalRemoteDataSourceImpl
 import com.example.remote.MockRemoteDataSourceImpl
 import com.example.remote.api.AirQualityApi
 import com.example.remote.api.BigDataApi
@@ -35,6 +37,15 @@ object RemoteSourceModule {
     @Singleton
     fun provideMockRemoteSource(mockApi: MockApi): MockRemoteDataSource {
         return MockRemoteDataSourceImpl(mockApi)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFinalRemoteSource(
+        airQualityApi: AirQualityApi,
+        bigDataApi: BigDataApi
+    ): FinalRemoteDataSource {
+        return FinalRemoteDataSourceImpl(airQualityApi, bigDataApi)
     }
 
 }

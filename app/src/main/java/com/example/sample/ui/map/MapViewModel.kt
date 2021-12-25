@@ -2,20 +2,25 @@ package com.example.sample.ui.map
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.common.LabelType
 import com.example.domain.usecase.AirQualityUseCase
 import com.example.domain.usecase.BigDataUseCase
+import com.example.domain.usecase.FinalUseCase
 import com.example.domain.usecase.UserUseCase
 import com.example.sample.base.BaseViewModel
 import com.example.sample.ui.mapper.AirQualityMapper
 import com.example.sample.ui.mapper.BigDataMapper
+import com.example.sample.ui.mapper.mapToPresentation
 import com.example.sample.ui.model.airquality.AirQuality
 import com.example.sample.ui.model.view.PresentModel
 import com.example.sample.utils.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.addTo
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
@@ -27,6 +32,7 @@ class MapViewModel @Inject constructor(
     private val airQualityUseCase: AirQualityUseCase,
     private val bigDataUseCase: BigDataUseCase,
     private val userUseCase: UserUseCase,
+    private val finalUseCase: FinalUseCase
 ) : BaseViewModel() {
 
     private val _isMapReady: BehaviorSubject<Boolean> = BehaviorSubject.createDefault(false)
@@ -77,6 +83,10 @@ class MapViewModel @Inject constructor(
     private val _labelSet = MutableLiveData<Pair<PresentModel, PresentModel>>()
     val labelSet: LiveData<Pair<PresentModel, PresentModel>>
         get() = _labelSet
+
+    private val _labelType = MutableLiveData<LabelType?>()
+    val labelType: LiveData<LabelType?>
+        get() = _labelType
 
     private var currentAqi = 0
     private var currentLatitude = 0.0
@@ -155,6 +165,14 @@ class MapViewModel @Inject constructor(
         userUseCase.setLanguage(userUseCase.getCurrentLanguage())
     }
 
+    private fun getLabelType(): LabelType {
+        return _labelType.value ?: LabelType.A
+    }
+
+    private fun setLabelType(type: LabelType?) {
+        _labelType.value = type
+    }
+
     private fun getAqi(lat: Double, lng: Double) {
         aqiDisposable?.let {
             if (!it.isDisposed) {
@@ -186,17 +204,21 @@ class MapViewModel @Inject constructor(
         currentLatitude = getLocationSubject().first
         currentLongitude = getLocationSubject().second
 
-        bigDataDisposable = bigDataUseCase.getLocationInfo(
+        bigDataDisposable = finalUseCase.getLocationInfo(
+            type = getLabelType(),
+            aqi = currentAqi,
             latitude = currentLatitude,
             longitude = currentLongitude,
             language = userUseCase.getLanguage()
         )
-            .map(BigDataMapper::mapToPresentation)
+            .map { it.mapToPresentation() }
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { showLoading() }
             .doAfterTerminate { hideLoading() }
             .subscribe({
-                setCurrentText(it.locationName)
+                //setCurrentText(it.locationName)
+                setCurrentText(it.locationName!!)
+                makeLog(javaClass.simpleName, "시발!!!: $it")
             }, { t ->
                 makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
             }).addTo(compositeDisposable)
@@ -247,6 +269,7 @@ class MapViewModel @Inject constructor(
     }
 
     fun reset() {
+        setLabelType(null)
         setLocationA(null)
         setLocationB(null)
         setMarkerButtonType(MarkerButtonType.NON_SELECTED)
@@ -271,6 +294,7 @@ class MapViewModel @Inject constructor(
     private fun setCurrentText(locationName: String) {
         when (getCurrentTextType()) {
             CurrentTextType.V_TEXT -> {
+                setLabelType(LabelType.B)
                 setLocationA(locationName)
                 setMarkerButtonType(MarkerButtonType.AREA_B_SELECTED)
                 setLocationTextType(CurrentTextType.SET_B_TEXT)

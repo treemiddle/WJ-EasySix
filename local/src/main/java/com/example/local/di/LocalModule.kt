@@ -2,6 +2,7 @@ package com.example.local.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.local.dao.LabelDao
 import com.example.local.database.WJDatabase
 import com.example.local.prefs.PrefsHelper
 import com.example.local.prefs.PrefsHelperImpl
@@ -34,6 +35,11 @@ object LocalModule {
             WJDatabase::class.java, "wj_database"
         )
             .build()
+    }
+
+    @Provides
+    fun providLabelDao(database: WJDatabase): LabelDao {
+        return database.labelDao()
     }
 
 }

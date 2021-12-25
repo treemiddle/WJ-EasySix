@@ -1,6 +1,6 @@
 package com.example.sample.ui.model.view
 
-import com.example.sample.utils.LabelType
+import com.example.common.LabelType
 
 data class PresentModel(
     var type: LabelType = LabelType.A,
