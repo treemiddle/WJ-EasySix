@@ -9,11 +9,11 @@ import com.example.common.LabelType
 @Entity(tableName = "label")
 data class LabelEntity(
     @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+    val id: Long,
     val type: LabelType?,
     val aqi: Int,
     val latitude: Double,
     val longitude: Double,
-    val nickname: String?,
+    var nickname: String?,
     val locationName: String?
 )

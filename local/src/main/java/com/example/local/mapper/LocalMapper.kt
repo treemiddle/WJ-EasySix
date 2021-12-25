@@ -5,6 +5,7 @@ import com.example.local.model.LabelEntity
 
 fun LabelEntity.mapToModel(): FinalDataModel {
     return FinalDataModel(
+        id = id,
         type = type,
         aqi = aqi,
         latitude = latitude,
@@ -16,6 +17,7 @@ fun LabelEntity.mapToModel(): FinalDataModel {
 
 fun FinalDataModel.mapToData(): LabelEntity {
     return LabelEntity(
+        id = id,
         type = type,
         aqi = aqi,
         latitude = latitude,

@@ -3,6 +3,7 @@ package com.example.domain.model
 import com.example.common.LabelType
 
 data class FinalDomainModel(
+    val id: Long = 0,
     val type: LabelType? = null,
     val aqi: Int = 0,
     val latitude: Double = 0.0,

@@ -9,6 +9,7 @@ import com.example.sample.ui.model.view.PresentModel
 
 fun PresentModel.mapToDomain(): FinalDomainModel {
     return FinalDomainModel(
+        id = id,
         type = type,
         aqi = aqi,
         latitude = latitude,
@@ -20,6 +21,7 @@ fun PresentModel.mapToDomain(): FinalDomainModel {
 
 fun FinalDomainModel.mapToPresentation(): PresentModel {
     return PresentModel(
+        id = id,
         type = type ?: LabelType.A,
         aqi = aqi,
         latitude = latitude,

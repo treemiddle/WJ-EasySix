@@ -3,6 +3,8 @@ package com.example.sample.ui.map
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.common.LabelType
+import com.example.data.mapper.mapToData
+import com.example.domain.model.FinalDomainModel
 import com.example.domain.usecase.AirQualityUseCase
 import com.example.domain.usecase.BigDataUseCase
 import com.example.domain.usecase.FinalUseCase
@@ -10,6 +12,7 @@ import com.example.domain.usecase.UserUseCase
 import com.example.sample.base.BaseViewModel
 import com.example.sample.ui.mapper.AirQualityMapper
 import com.example.sample.ui.mapper.BigDataMapper
+import com.example.sample.ui.mapper.mapToDomain
 import com.example.sample.ui.mapper.mapToPresentation
 import com.example.sample.ui.model.airquality.AirQuality
 import com.example.sample.ui.model.view.PresentModel
@@ -52,13 +55,13 @@ class MapViewModel @Inject constructor(
     val airQualityModel: LiveData<AirQuality>
         get() = _airQualityModel
 
-    private val _locationA = MutableLiveData<String?>()
-    val locationA: LiveData<String?>
-        get() = _locationA
+    private val _nicknameA = MutableLiveData<String?>()
+    val nicknameA: LiveData<String?>
+        get() = _nicknameA
 
-    private val _locationB = MutableLiveData<String?>()
-    val locationB: LiveData<String?>
-        get() = _locationB
+    private val _nicknameB = MutableLiveData<String?>()
+    val nicknameB: LiveData<String?>
+        get() = _nicknameB
 
     private val _markerButtonType = MutableLiveData(MarkerButtonType.NON_SELECTED)
     val markerButtonType: LiveData<MarkerButtonType>
@@ -129,16 +132,35 @@ class MapViewModel @Inject constructor(
         _bLocationSubejct.onNext(Unit)
     }
 
-    private fun checkLocationTextA() {
-        if (getLocationTextA().isNullOrEmpty().not()) {
-            moveScreen(MapLabelClick.LABEL_A)
-        }
+    fun updateNicknameLabelA(nickname: String) {
+        _nicknameA.value = nickname
+        makeLog(javaClass.simpleName, "A 닉네임 받았어요: $nickname")
+        getLabelA().also { it.nickname = nickname }
+        makeLog(javaClass.simpleName, "닉넴 업뎃: ${getLabelA()}")
+        finalUseCase.updateLabel(getLabelA().mapToDomain())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                makeLog(javaClass.simpleName, "업로드 성공")
+            }, { t ->
+                makeLog(javaClass.simpleName, "fail: ${t.localizedMessage}")
+            }).addTo(compositeDisposable)
     }
 
-    private fun checkLocationTextB() {
-        if (getLocationTextB().isNullOrEmpty().not()) {
-            moveScreen(MapLabelClick.LABEL_B)
-        }
+    fun updateNicknameLabelB(nickname: String) {
+        _nicknameB.value = nickname
+        getLabelB().also { it.nickname = nickname }
+        makeLog(javaClass.simpleName, "닉넴 업뎃: ${getLabelB()}")
+        finalUseCase.updateLabel(getLabelB().mapToDomain())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                makeLog(javaClass.simpleName, "업로드 성공")
+                getCurrentLocation()
+
+            }, { t ->
+                makeLog(javaClass.simpleName, "fail: ${t.localizedMessage}")
+            }).addTo(compositeDisposable)
     }
 
     private fun moveScreen(clickType: MapLabelClick) {
@@ -216,8 +238,8 @@ class MapViewModel @Inject constructor(
             .doOnSubscribe { showLoading() }
             .doAfterTerminate { hideLoading() }
             .subscribe({
-                //setCurrentText(it.locationName)
-                setCurrentText(it.locationName!!)
+                //setCurrentText(it.locationName!!)
+                setData(it)
                 makeLog(javaClass.simpleName, "시발!!!: $it")
             }, { t ->
                 makeLog(javaClass.simpleName, "getLocationInfo fail: ${t.localizedMessage}")
@@ -234,14 +256,6 @@ class MapViewModel @Inject constructor(
 
     private fun getCurrentTextType(): CurrentTextType? {
         return _currentTextType.value
-    }
-
-    private fun getLocationTextA(): String? {
-        return _locationA.value
-    }
-
-    private fun getLocationTextB(): String? {
-        return _locationB.value
     }
 
     private fun checkCurrentText() {
@@ -270,8 +284,8 @@ class MapViewModel @Inject constructor(
 
     fun reset() {
         setLabelType(null)
-        setLocationA(null)
-        setLocationB(null)
+        _nicknameA.value = null
+        _nicknameB.value = null
         setMarkerButtonType(MarkerButtonType.NON_SELECTED)
         _currentTextType.value = CurrentTextType.V_TEXT
         setVisibleOrInVisible(true)
@@ -281,32 +295,29 @@ class MapViewModel @Inject constructor(
         _labelSet.value = getLabelA() to getLabelB()
     }
 
-    private fun setLabel(type: LabelType, locationName: String): PresentModel {
-        return PresentModel(
-            type = type,
-            aqi = currentAqi,
-            latitude = currentLatitude,
-            longitude = currentLongitude,
-            locationName = locationName
-        )
+    private fun setLabel(type: LabelType, model: PresentModel) {
+        when (type) {
+            LabelType.A -> _labelA.value = model
+            LabelType.B -> _labelB.value = model
+        }
     }
 
-    private fun setCurrentText(locationName: String) {
+    private fun setData(model: PresentModel) {
         when (getCurrentTextType()) {
             CurrentTextType.V_TEXT -> {
+                _nicknameA.value = model.locationName
+                setLabel(getLabelType(), model)
                 setLabelType(LabelType.B)
-                setLocationA(locationName)
                 setMarkerButtonType(MarkerButtonType.AREA_B_SELECTED)
                 setLocationTextType(CurrentTextType.SET_B_TEXT)
-                _labelA.value = setLabel(LabelType.A, locationName)
                 makeLog(javaClass.simpleName, "a: ${_labelA.value}")
             }
             CurrentTextType.SET_B_TEXT -> {
-                setLocationB(locationName)
+                _nicknameB.value = model.locationName
+                setLabel(getLabelType(), model)
                 setMarkerButtonType(MarkerButtonType.BOTH_SELECTED)
                 setLocationTextType(CurrentTextType.BOOK_TEXT)
                 setVisibleOrInVisible(false)
-                _labelB.value = setLabel(LabelType.B, locationName)
                 makeLog(javaClass.simpleName, "b: ${_labelB.value}")
             }
             else -> {
@@ -323,12 +334,16 @@ class MapViewModel @Inject constructor(
         _currentTextType.value = type
     }
 
-    fun setLocationA(text: String?) {
-        _locationA.value = text
+    private fun checkLocationTextA() {
+        if (_nicknameA.value.isNullOrEmpty().not()) {
+            moveScreen(MapLabelClick.LABEL_A)
+        }
     }
 
-    fun setLocationB(text: String?) {
-        _locationB.value = text
+    private fun checkLocationTextB() {
+        if (_nicknameB.value.isNullOrEmpty().not()) {
+            moveScreen(MapLabelClick.LABEL_B)
+        }
     }
 
     private fun registerRx() {
@@ -346,10 +361,12 @@ class MapViewModel @Inject constructor(
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkCurrentText() },
 
+            // A 로케이션 클릭 시 값 넘겨서 화면 이동
             _aLocationSubejct.throttleFirst(DEFAULT_THROTTLE_DURATION, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkLocationTextA() },
 
+             // B 로케이션 클릭 시 값 넘겨서 화면 이동
             _bLocationSubejct.throttleFirst(DEFAULT_THROTTLE_DURATION, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { checkLocationTextB() }

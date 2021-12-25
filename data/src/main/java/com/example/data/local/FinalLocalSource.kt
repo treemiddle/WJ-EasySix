@@ -12,4 +12,7 @@ interface FinalLocalSource {
 
     fun getLabel(lat: Double, lng: Double): Single<FinalDataModel>
 
+    fun findLabel(model: FinalDataModel): Single<FinalDataModel>
+
+    fun deleteAll(): Completable
 }

@@ -13,6 +13,7 @@ import com.example.sample.databinding.FragmentMapBinding
 import com.example.sample.ui.MainViewModel
 import com.example.sample.utils.EventObserver
 import com.example.sample.utils.MapLabelClick
+import com.example.sample.utils.makeLog
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -66,8 +67,8 @@ class MapFragment : BaseFragment<FragmentMapBinding>(R.layout.fragment_map) {
             inMemoryLabel.observe(viewLifecycleOwner, {
                 it.nickname?.let { nick ->
                     when (it.type) {
-                        LabelType.A -> viewModel.setLocationA(nick)
-                        LabelType.B -> viewModel.setLocationB(nick)
+                        LabelType.A -> viewModel.updateNicknameLabelA(nick)
+                        LabelType.B -> viewModel.updateNicknameLabelB(nick)
                     }
                 }
             })
